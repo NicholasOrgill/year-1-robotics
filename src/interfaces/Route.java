@@ -8,4 +8,5 @@ public interface Route {
 	public Move getNextMove();
 	public void changeRoute(ArrayList<Move> moves);
 	public void setMove(int i, Move mv);
+	public int  getLength();
 }
