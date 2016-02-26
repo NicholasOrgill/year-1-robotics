@@ -45,6 +45,14 @@ public interface IRobot {
 	public void assignPick(IPick _pick);
 
 	/**
+	 * Assign a list of picks to the robot
+	 * 
+	 * @param _picks
+	 *            The list of picks to be assigned
+	 */
+	public void assignPicks(ArrayList<IPick> _picks);
+
+	/**
 	 * Get the route for the robot
 	 * 
 	 * @return The robots route
