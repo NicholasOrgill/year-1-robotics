@@ -11,7 +11,7 @@ import interfaces.IWarehouse;
 import interfaces.RobotState;
 import rp.robotics.navigation.GridPose;
 
-public class Assigner implements IAssigner {
+public class Assigner extends Thread implements IAssigner, Runnable {
 
 	private IWarehouse warehouse;
 	private IRoutePlanner routePlanner;
@@ -29,7 +29,6 @@ public class Assigner implements IAssigner {
 		setDelay(_delay);
 	}
 
-	@Override
 	public void run() {
 
 		while (warehouse.getActive()) {
