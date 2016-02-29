@@ -13,8 +13,9 @@ import java.util.ArrayList;
 public class FindRouteAStar implements RouteFinder {
 
 	// [AMENDABLE] The heuristic to be utilised
-	// TODO pass heuristic
-
+	// pass an appropriate heuristic
+	private AStarHeur heur;
+	
 	// The nodes that have already been explored by the search algorithm
 	private ArrayList explored = new ArrayList();
 
