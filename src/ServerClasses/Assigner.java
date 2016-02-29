@@ -17,6 +17,12 @@ public class Assigner implements IAssigner {
 	private IRoutePlanner routePlanner;
 	private int delay;
 
+	/**
+	 * The default constructor for the assigner
+	 * @param _warehouse The warehouse that the assigner is based on
+	 * @param _routePlanner The route planner for the warehouse
+	 * @param _delay The delay for the thread
+	 */
 	public Assigner(IWarehouse _warehouse, IRoutePlanner _routePlanner, int _delay) {
 		warehouse = _warehouse;
 		routePlanner = _routePlanner;
