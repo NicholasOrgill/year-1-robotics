@@ -82,4 +82,10 @@ public class Warehouse implements IWarehouse {
 		return null;
 	}
 
+	@Override
+	public void setActive(boolean _active) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
