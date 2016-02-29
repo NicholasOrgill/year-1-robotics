@@ -21,7 +21,7 @@ public class LinkedBlockingQueue<E> implements BlockingQueue<E> {
     public E take() throws InterruptedException {
 
         synchronized (this.list) {
-            while (!this.list.isEmpty()) {
+            while (this.list.isEmpty()) {
                 this.list.wait();
             }
 
