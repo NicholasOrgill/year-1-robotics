@@ -26,12 +26,13 @@ public class Route implements IRoute {
 		boolean n = routeChanged;
 		routeChanged = false;
 		return n;
-		
 	}
 
 	@Override
 	public IMove getNextMove() {
-		//need to change arraylist of moves to a queue to make this easier
+		IMove nextMove = route.get(0);
+		route.remove(0);
+		return nextMove;
 	}
 
 	@Override
