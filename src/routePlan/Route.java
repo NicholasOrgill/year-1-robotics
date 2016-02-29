@@ -86,5 +86,18 @@ public class Route {
 			return false;
 		}
 	}
+	
+	/**
+	 * Get the route size = the number of moves = the number of items in the
+	 * Array List
+	 * 
+	 * Should be useful, so as to know which index can the moves be obtained up
+	 * to and thus avoid NullPointerExceptions
+	 * 
+	 * @return The number of moves in this route
+	 */
+	public int size() {
+		return moves.size();
+	}
 
 }
