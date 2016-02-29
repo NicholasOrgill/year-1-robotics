@@ -25,4 +25,15 @@ public interface IRoutePlanner {
 	 * @return The route the robot would have to take
 	 */
 	public IRoute getRoute(ArrayList<GridPose> _ps);
+
+	/**
+	 * Get the euclidian distance between two points
+	 * 
+	 * @param _p1
+	 *            The first point
+	 * @param _p2
+	 *            The second point
+	 * @return The euclidian distance between the two points
+	 */
+	public double getEuclidianDistance(GridPose _p1, GridPose _p2);
 }
