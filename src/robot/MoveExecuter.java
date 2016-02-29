@@ -7,13 +7,15 @@ public class MoveExecuter implements Runnable {
     private final LightSensor left;
     private final LightSensor right;
     private final DifferentialPilot pilot;
-    private final BlockingQueue<Move> moves = new LinkedBlockingQueue<>();
+    private final ServerConnection server;
 
     public MoveExecuter(
+            ServerConnection server,
             DifferentialPilot pilot,
             LightSensor left,
             LightSensor right)
     {
+        this.server = server;
         this.pilot = pilot;
         this.left = left;
         this.right = right;
@@ -22,26 +24,59 @@ public class MoveExecuter implements Runnable {
     @Override
     public void run() {
 
-        pilot.forward();
-
         while (true) {
-            final Move move = this.moves.take();
+            final Move move = server.getNextMove();
 
-            /*
-            int lefty = left.readValue();
-            int righty = right.readValue();
+            switch (move.type) {
+            case MOVE_FORWARD:
+                this.moveForward(move.getUnits());
+                break;
 
-            if (lefty < 33) {
-                pilot.rotate(5, true); // different comparisons for each sensor
-                                       // as they are calibrated differently
-            } else if (righty < 35) {
-                pilot.rotate(-5, true);
+            case TURN_LEFT:
+                this.pilot.rotate(-90);
+                break;
+
+            case TURN_RIGHT:
+                this.pilot.rotate(90);
+                break;
+
+            case TURN_AROUND:
+                this.pilot.rotate(180);
+                break;
             }
-            */
+
+            server.confirmMove();
         }
     }
 
-    public void pushMove(Move move) {
-        this.moves.add(move);
+    /**
+     * Moves the robot forward the specified number of units (grid tiles).
+     */
+    private void moveForward(int units) {
+        this.pilot.forward();
+
+        final Timer timer = new Timer();
+        int passed = 0;
+        boolean left = this.leftIsDark();
+        boolean right = this.rightIsDark();
+
+        while (passed < units) {
+
+            if (left && right && !timer.isRunning()) {
+                // Going over a new junction
+                passed++;
+                timer.runFor( /* time to pass 0.1m */ );
+
+            } else if (left) {
+                this.pilot.rotate(5);
+            } else if (right) {
+                this.pilot.rotate(-5);
+            }
+
+            left = this.leftIsDark();
+            right = this.rightIsDark();
+        }
+
+        this.pilot.stop();
     }
 }

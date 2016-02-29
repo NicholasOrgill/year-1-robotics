@@ -9,14 +9,7 @@ public class Move {
      * The type of move.
      */
     public enum Type {
-        FORWARD, ROTATE
-    }
-
-    /**
-     * The angle to turn for rotate moves.
-     */
-    public enum Angle {
-        LEFT, RIGHT, ONE_EIGHTY
+        MOVE_FORWARD, TURN_LEFT, TURN_RIGHT, TURN_AROUND
     }
 
     /**
@@ -24,8 +17,7 @@ public class Move {
      */
     public final Type type;
 
-    private final int units;
-    private final Angle angle;
+    private final Optional<Integer> units;
 
     /**
      * Constructs a new forward Move with the given amount of units in grid
@@ -36,24 +28,39 @@ public class Move {
      * @return the constructed Move object
      */
     public static Move forward(int units) {
-        return new Move(Type.FORWARD, units, Angle.LEFT);
+        return new Move(Type.FORWARD, Optional.of(units));
     }
 
     /**
-     * Constructs a new rotate Move with the given angle.
+     * Constructs a new Move that tells the robot to turn left.
      *
-     * @param angle
-     *            the angle to rotate for
      * @return the constructed Move object
      */
-    public static Move rotate(Angle angle) {
-        return new Move(Type.ROTATE, -1, angle);
+    public static Move turnLeft() {
+        return new Move(Type.TURN_LEFT, Optional.empty());
     }
 
-    private Move(Type type, int units, Angle angle) {
+    /**
+     * Constructs a new Move that tells the robot to turn right.
+     *
+     * @return the constructed Move object
+     */
+    public static Move turnRight() {
+        return new Move(Type.TURN_RIGHT, Optional.empty());
+    }
+
+    /**
+     * Constructs a new Move that tells the robot to turn around.
+     *
+     * @return the constructed Move object
+     */
+    public static Move turnAround() {
+        return new Move(Type.TURN_AROUND, Optional.empty());
+    }
+
+    private Move(Type type, int units) {
         this.type = type;
         this.units = units;
-        this.angle = angle;
     }
 
     /**
@@ -62,15 +69,6 @@ public class Move {
      * @return the number of units to move forward for
      */
     public int getUnits() {
-        return this.units;
-    }
-
-    /**
-     * Returns the angle to rotate for.
-     *
-     * @return the angle to rotate for
-     */
-    public Angle getAngle() {
-        return this.angle;
+        return this.units.get();
     }
 }
