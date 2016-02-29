@@ -28,7 +28,7 @@ public class Move {
      * @return the constructed Move object
      */
     public static Move forward(int units) {
-        return new Move(Type.FORWARD, Optional.of(units));
+        return new Move(Type.MOVE_FORWARD, Optional.of(units));
     }
 
     /**
