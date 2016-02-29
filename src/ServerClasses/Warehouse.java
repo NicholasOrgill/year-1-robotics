@@ -74,6 +74,12 @@ public class Warehouse implements IWarehouse {
 	}
 
 	@Override
+	public void setActive(boolean _active) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public IJob getNextIncompleteJob() {
 		for(IJob j : jobs){
 			if (j.getComplete() == false) return j;
@@ -81,5 +87,6 @@ public class Warehouse implements IWarehouse {
 		//TODO: if all jobs complete
 		return null;
 	}
+
 
 }

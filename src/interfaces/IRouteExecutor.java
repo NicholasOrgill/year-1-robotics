@@ -17,4 +17,11 @@ public interface IRouteExecutor {
 	 */
 	public void setDelay(int _delay);
 
+	/**
+	 * 
+	 * @param _msg
+	 * @return
+	 */
+	public IMessage returnMessage(IMessage _msg);
+
 }
