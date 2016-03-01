@@ -95,4 +95,16 @@ public interface IWarehouse {
 	 */
 	public IJob getNextIncompleteJob();
 
+	/**
+	 * Send a message to the given robot.
+	 * @param robotIndex The robot to send the message to.
+	 * @param header The message's header.
+	 * @param message The message's body.
+     */
+	public void sendMessage(int robotIndex, String header, String message);
+
+	/**
+	 * @return The next message to be received (after blocking).
+     */
+	public IMessage nextMessage();
 }
