@@ -3,7 +3,10 @@ package RobotClasses;
 import java.util.Observable;
 
 /**
- * Created by bxk56_000 on 01/03/2016.
+ * Create an observable interface to allow the robot to
+ * take actions on every new message.
+ *
+ * We'll send the message in our call to notifyObservers.
  */
 public class MessageListener extends Observable{
     private MessageQueue queue;

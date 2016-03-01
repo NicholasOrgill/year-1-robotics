@@ -1,7 +1,8 @@
 package RobotClasses;
 
 /**
- * Created by bxk56_000 on 01/03/2016.
+ * Implement a thread which listens for messages, adds them to a queue, and notifies
+ * a callback object.
  */
 public class MessageListenerThread extends Thread {
     private final MessageQueue queue;
@@ -14,7 +15,7 @@ public class MessageListenerThread extends Thread {
 
     public void run() {
         for (;;) {
-            // Listen for message (mocked here).
+            // Block while waiting for message (mocked here).
             Message message = new Message("Header", "Content");
 
             // Add message to our queue and repeat.
