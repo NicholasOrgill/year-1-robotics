@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 import interfaces.IAssigner;
 import interfaces.IPick;
-import interfaces.IRobot;
-import interfaces.IRoute;
 import interfaces.IRoutePlanner;
 import interfaces.IWarehouse;
-import interfaces.RobotState;
 import rp.robotics.navigation.GridPose;
 
 public class Assigner extends Thread implements IAssigner, Runnable {
@@ -37,53 +34,58 @@ public class Assigner extends Thread implements IAssigner, Runnable {
 
 		// Whilst the warehouse is running
 		while (warehouse.getActive()) {
-			// Get the first robot
-			IRobot robot = warehouse.getRobot(0);
-			// The robot has run out of picks to collect so assign new ones
-			if (robot.getState() == RobotState.WAITING_FOR_PICKS) {
-				int weight = 0;
-				// Assign picks until the weight limit is exceeded
-				while (weight <= 50) {
-					// Get the next unassigned pick
-					IPick nextPick = warehouse.getNextIncompleteJob().getNextUnassignedPick();
-					// assign it to the robot
-					robot.assignPick(nextPick);
-					// Increase the current weight
-					weight += nextPick.getWeight();
-				}
-			}
+
+			// Single robot
+			// IRobot robot = warehouse.getRobot(0);
+			// if (robot.getState() == RobotState.WAITING_FOR_PICKS) {
+			// int weight = 0;
+			// ArrayList<IPick> picks = new ArrayList<IPick>();
+			// while (weight <= 50) {
+			// IPick nextPick =
+			// warehouse.getNextIncompleteJob().getNextUnassignedPick();
+			// picks.add(nextPick);
+			// weight += nextPick.getWeight();
+			// }
+			// robot.assignPicks(picks);
+			// robot.assignPicks(orderPicks(picks));
+			//
 
 			// Once picks have been assigned the robot will be waiting for the
 			// route
-			if (robot.getState() == RobotState.WAITING_FOR_ROUTE) {
-				// Get the route from the route planner
-				IRoute route = routePlanner.getRoute(robot.getPose(), robot.getPicks().get(0).getItem().getPose());
-				robot.setRoute(route);
-			}
+			// if (robot.getState() == RobotState.WAITING_FOR_ROUTE) {
+			// IRoute route = routePlanner.getRoute(robot.getPose(),
+			// robot.getPicks().get(0).getItem().getPose());
+			// robot.setRoute(route);
+			// }
 
-			try {
-				Thread.sleep(delay);
-			} catch (InterruptedException e) {
-				System.err.println("Assigner thread interrupted");
-				e.printStackTrace();
-			}
+			// TODO: Multi robot
+			ArrayList<Integer> weight = new ArrayList<Integer>(warehouse.getRobotCount());
+			ArrayList<ArrayList<IPick>> picks = new ArrayList<ArrayList<IPick>>(warehouse.getRobotCount());
+			ArrayList<Integer> bidVal = new ArrayList<Integer>(warehouse.getRobotCount());
+
 		}
 
+		try {
+			Thread.sleep(delay);
+		} catch (InterruptedException e) {
+			System.err.println("Assigner thread interrupted");
+			e.printStackTrace();
+		}
 	}
 
-	private ArrayList<Pick> orderPicks(ArrayList<Pick> _picks) {
+	private ArrayList<IPick> orderPicks(ArrayList<IPick> _picks) {
 
-		// Picks remaining to be assigned
-		ArrayList<Pick> remainingPicks = _picks;
-		/// Picks already assigned
-		ArrayList<Pick> selectedPicks = new ArrayList<Pick>();
-		Pick bestPick = null;
-		// While there are still picks to be assigned
+		ArrayList<IPick> remainingPicks = _picks;
+		ArrayList<IPick> selectedPicks = new ArrayList<IPick>();
+		IPick bestPick = null;
 		while (remainingPicks.size() != 0) {
 			// The currently found best length of the route
 			double bestLength = Double.MAX_VALUE;
-			for (Pick selected : selectedPicks) {
-				for (Pick remaining : remainingPicks) {
+			for (IPick selected : selectedPicks) {
+				for (IPick remaining : remainingPicks) {
+					// int length =
+					// routePlanner.getRoute(selected.getItem().getPose(),
+					// remaining.getItem().getPose()).getLength();
 					double length = routePlanner.getEuclidianDistance(selected.getItem().getPose(),
 							remaining.getItem().getPose());
 					if (length < bestLength) {
