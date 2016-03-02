@@ -3,7 +3,7 @@ package robot;
 /**
  * Represents a move that a robot should execute.
  */
-public class Move {
+public final class Move {
 
     /**
      * The type of move.
@@ -11,13 +11,6 @@ public class Move {
     public enum Type {
         MOVE_FORWARD, TURN_LEFT, TURN_RIGHT, TURN_AROUND
     }
-
-    /**
-     * The type of this move.
-     */
-    public final Type type;
-
-    private final Optional<Integer> units;
 
     /**
      * Constructs a new forward Move with the given amount of units in grid
@@ -28,7 +21,7 @@ public class Move {
      * @return the constructed Move object
      */
     public static Move forward(int units) {
-        return new Move(Type.MOVE_FORWARD, Optional.of(units));
+        return new Move(Type.MOVE_FORWARD, units);
     }
 
     /**
@@ -37,7 +30,7 @@ public class Move {
      * @return the constructed Move object
      */
     public static Move turnLeft() {
-        return new Move(Type.TURN_LEFT, Optional.empty());
+        return new Move(Type.TURN_LEFT);
     }
 
     /**
@@ -46,7 +39,7 @@ public class Move {
      * @return the constructed Move object
      */
     public static Move turnRight() {
-        return new Move(Type.TURN_RIGHT, Optional.empty());
+        return new Move(Type.TURN_RIGHT);
     }
 
     /**
@@ -55,12 +48,24 @@ public class Move {
      * @return the constructed Move object
      */
     public static Move turnAround() {
-        return new Move(Type.TURN_AROUND, Optional.empty());
+        return new Move(Type.TURN_AROUND);
+    }
+
+    /**
+     * The type of this move.
+     */
+    public final Type type;
+
+    private final Optional<Integer> units;
+
+    private Move(Type type) {
+        this.type = type;
+        this.units = Optional.empty();
     }
 
     private Move(Type type, int units) {
         this.type = type;
-        this.units = units;
+        this.units = Optional.of(units);
     }
 
     /**
