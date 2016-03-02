@@ -12,9 +12,8 @@ public class LinkedBlockingQueue<E> implements BlockingQueue<E> {
     public void add(E e) {
         synchronized (this.list) {
             this.list.add(e);
+            this.list.notifyAll();
         }
-
-        this.list.notifyAll();
     }
 
     @Override
