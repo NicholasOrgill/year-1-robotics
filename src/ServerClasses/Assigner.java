@@ -19,9 +19,13 @@ public class Assigner implements IAssigner {
 
 	/**
 	 * The default constructor for the assigner
-	 * @param _warehouse The warehouse that the assigner is based on
-	 * @param _routePlanner The route planner for the warehouse
-	 * @param _delay The delay for the thread
+	 * 
+	 * @param _warehouse
+	 *            The warehouse that the assigner is based on
+	 * @param _routePlanner
+	 *            The route planner for the warehouse
+	 * @param _delay
+	 *            The delay for the thread
 	 */
 	public Assigner(IWarehouse _warehouse, IRoutePlanner _routePlanner, int _delay) {
 		warehouse = _warehouse;
@@ -33,20 +37,34 @@ public class Assigner implements IAssigner {
 	public void run() {
 
 		while (warehouse.getActive()) {
-			IRobot robot = warehouse.getRobot(0);
-			if (robot.getState() == RobotState.WAITING_FOR_PICKS) {
-				int weight = 0;
-				while (weight <= 50) {
-					IPick nextPick = warehouse.getNextIncompleteJob().getNextUnassignedPick();
-					robot.assignPick(nextPick);
-					weight += nextPick.getWeight();
-				}
+
+			// Single robot
+//			IRobot robot = warehouse.getRobot(0);
+//			if (robot.getState() == RobotState.WAITING_FOR_PICKS) {
+//				int weight = 0;
+//				ArrayList<IPick> picks = new ArrayList<IPick>();
+//				while (weight <= 50) {
+//					IPick nextPick = warehouse.getNextIncompleteJob().getNextUnassignedPick();
+//					picks.add(nextPick);
+//					weight += nextPick.getWeight();
+//				}
+//				robot.assignPicks(picks);
+//				robot.assignPicks(orderPicks(picks));
+//
+//			if (robot.getState() == RobotState.WAITING_FOR_ROUTE) {
+//				IRoute route = routePlanner.getRoute(robot.getPose(), robot.getPicks().get(0).getItem().getPose());
+//				robot.setRoute(route);
+//			}
+
+				
+				// TODO: Multi robot
+				ArrayList<Integer> weight = new ArrayList<Integer>(warehouse.getRobotCount());
+				ArrayList<ArrayList<IPick>> picks = new ArrayList<ArrayList<IPick>>(warehouse.getRobotCount());
+				ArrayList<Integer> bidVal = new ArrayList<Integer>(warehouse.getRobotCount());
+				
+				
 			}
 
-			if (robot.getState() == RobotState.WAITING_FOR_ROUTE) {
-				IRoute route = routePlanner.getRoute(robot.getPose(), robot.getPicks().get(0).getItem().getPose());
-				robot.setRoute(route);
-			}
 
 			try {
 				Thread.sleep(delay);
@@ -58,15 +76,15 @@ public class Assigner implements IAssigner {
 
 	}
 
-	private ArrayList<Pick> orderPicks(ArrayList<Pick> _picks) {
+	private ArrayList<IPick> orderPicks(ArrayList<IPick> _picks) {
 
-		ArrayList<Pick> remainingPicks = _picks;
-		ArrayList<Pick> selectedPicks = new ArrayList<Pick>();
-		Pick bestPick = null;
+		ArrayList<IPick> remainingPicks = _picks;
+		ArrayList<IPick> selectedPicks = new ArrayList<IPick>();
+		IPick bestPick = null;
 		while (remainingPicks.size() != 0) {
 			double bestLength = Double.MAX_VALUE;
-			for (Pick selected : selectedPicks) {
-				for (Pick remaining : remainingPicks) {
+			for (IPick selected : selectedPicks) {
+				for (IPick remaining : remainingPicks) {
 					// int length =
 					// routePlanner.getRoute(selected.getItem().getPose(),
 					// remaining.getItem().getPose()).getLength();
@@ -90,7 +108,7 @@ public class Assigner implements IAssigner {
 					subRoute.add(1, bestPick.getPose());
 					int newLength = routePlanner.getRoute(subRoute).getLength();
 					int diff = newLength - originalLength;
-					if(diff < minExtension){
+					if (diff < minExtension) {
 						minPos = i;
 						minExtension = diff;
 					}
