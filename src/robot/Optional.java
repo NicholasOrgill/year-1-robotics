@@ -56,4 +56,13 @@ public final class Optional<T> {
 
         return this.val;
     }
+
+    /**
+     * Returns true if there is a value present, otherwise false.
+     *
+     * @return true if there is a value present, otherwise false
+     */
+    public boolean isPresent() {
+        return this.val != null;
+    }
 }
