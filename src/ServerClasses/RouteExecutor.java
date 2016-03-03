@@ -1,7 +1,10 @@
 package ServerClasses;
 
+import java.util.ArrayList;
+
 import interfaces.IMessage;
 import interfaces.IRobot;
+import interfaces.IRoute;
 import interfaces.IRouteExecutor;
 import interfaces.IWarehouse;
 import interfaces.RobotState;
@@ -11,6 +14,7 @@ public class RouteExecutor extends Thread implements IRouteExecutor {
 	private IWarehouse warehouse;
 	private int delay;
 	private int robotCount;
+	private ArrayList<IRobot> excRobots;
 	
 	public RouteExecutor (IWarehouse _warehouse, int _delay) {
 		warehouse = _warehouse;
@@ -25,7 +29,13 @@ public class RouteExecutor extends Thread implements IRouteExecutor {
 				IRobot robot = warehouse.getRobot(i);
 				if (robot.getState() == RobotState.ROUTE_ASSIGNED) {
 					robot.setState(RobotState.EXECUTING_ROUTE);
+					excRobots.add(robot);
 				}
+			}
+			for(int i = 0; i < excRobots.size(); i++) {
+				IRobot cRob = excRobots.get(i);
+				IRoute cRoute = cRob.getRoute();
+				
 			}
 		}
 	}

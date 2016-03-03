@@ -1,22 +1,28 @@
 package ServerClasses;
 
+import interfaces.Direction;
 import interfaces.IMove;
 
 public class Move implements IMove {
-	private int direction;
+	private Direction direction;
 	
-	public Move (int _direction) {
+	public Move (Direction _direction) {
 		direction = _direction;
 	}
 
 	@Override
-	public int getDirection() {
+	public Direction getDirection() {
 		return direction;
 	}
 
 	@Override
-	public void setDirection(int _direction) {
+	public void setDirection(Direction _direction) {
 		direction = _direction;
+	}
+	
+	@Override
+	public String toString() {
+		return direction.toString(); 
 	}
 
 }
