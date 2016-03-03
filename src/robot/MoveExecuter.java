@@ -8,10 +8,14 @@ import lejos.robotics.navigation.DifferentialPilot;
  * robot.
  */
 public class MoveExecuter implements Runnable {
+    private static final int SENSOR_NOISE = 5;
+
     private final LightSensor left;
     private final LightSensor right;
     private final DifferentialPilot pilot;
     private final ServerConnection server;
+    private int leftPrevious;
+    private int rightPrevious;
 
     public MoveExecuter(
             ServerConnection server,
@@ -23,6 +27,9 @@ public class MoveExecuter implements Runnable {
         this.pilot = pilot;
         this.left = left;
         this.right = right;
+        
+        this.leftPrevious = left.readValue();
+        this.rightPrevious = right.readValue();
     }
 
     @Override
@@ -36,7 +43,7 @@ public class MoveExecuter implements Runnable {
                 this.moveForward(move.getUnits());
                 break;
 
-            case TURN_LEFT:
+            case TURN_LEFT:    
                 this.pilot.rotate(-90);
                 break;
 
@@ -53,16 +60,27 @@ public class MoveExecuter implements Runnable {
         }
     }
 
+    private boolean compareReadings(int r1, int r2) {
+        if (r1 + SENSOR_NOISE < r2 - SENSOR_NOISE) {
+            
+        } else if (r1 - SENSOR_NOISE > r2 + SENSOR_NOISE) {
+            
+        }
+    }
+
     /**
      * Returns true if the left sensor detects a grid line, false otherwise.
      */
     private boolean leftIsDark() {
+        final int reading = this.left.readValue();
+        if (reading + SENSOR_NOISE < leftPrevious - SENSOR_NOISE)
     }
 
     /**
      * Returns true if the right sensor detects a grid line, false otherwise.
      */
     private boolean rightIsDark() {
+        return false;
     }
 
     /**

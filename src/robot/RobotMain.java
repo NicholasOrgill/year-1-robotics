@@ -23,7 +23,11 @@ public class RobotMain {
 
         final MoveExecuter moveExecuter =
                 new MoveExecuter(server, pilot, leftSensor, rightSensor);
+        
+        // final RobotInterface iface = new RobotInterface(server);
 
+        // new Thread(server).start();
         new Thread(moveExecuter).start();
+        // new Thread(iface).start();
     }
 }

@@ -1,4 +1,6 @@
 # Ignore hidden files
 .*
+*.nxj
+*.nxd
 
 /bin/
