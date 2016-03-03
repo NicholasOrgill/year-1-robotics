@@ -34,7 +34,7 @@ public class FindRouteAStar implements RouteFinder {
 		this.heur = heur;
 
 		// TODO Retrieve grid dimensions, placeholders for now
-		int w, h;
+		// 
 		gridpositions = new Grid[w][h];
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
@@ -60,12 +60,69 @@ public class FindRouteAStar implements RouteFinder {
 		while (open.size() > 0) {
 			// TODO get first state in open list
 			// should have the best heuristical outcome
-
+			Grid present = getOpenFirst();
+			if(present == gridpositions[gx][gx]) {
+				// stop search, reached goal node
+			}
+			
+			addExplored(present);
+			removeOpen(present);
+			
+			
 			// TODO iterate through all of the neighbouring grid positions
-			//
+			// Movements can only be in four directions so the only possible translations are:
+			// (1,0), (-1,0), (0,1), (0,-1)
+			// which when added to the current position would give us the coordinates of
+			// the neoghbouring cells accordingly
+			
+			// go through X coords - explanation above
+			for(int x = -1; x < 2; x++) {
+					// go through Y coords - explanation above
+					for(int y = -1; y < 2; y++) {
+						
+						int neighbouringX = present.getX() + x;
+						int neighbouringY = present.getY() + y;
+						
+						// check whether the location is allowed
+						if(isItAllowed(ax, ay, neighbouringX, neighbouringY)) {
+							// cost to move, typically 1, as it is one position away from the next direct
+							float costToNeighbour = present.getCost() + 1;
+							
+							Grid neighbour = gridpositions[neighbouringX][neighbouringY];
+						
+							float neighbourCost = neighbour.getCost();
+							// need to check whether that node has been considered before
+							// and if so check whether we have obtained a lower cost for it
+							// thus take it back into consideration
+							if(costToNeighbour < neighbourCost) {
+								if(isItOpen(neighbour)) {
+									removeOpen(neighbour);
+								}
+								if(isItExplored(neighbour)) {
+									removeExplored(neighbour);
+								}
+							}
+							
+							if(isItExplored(neighbour) == false && isItOpen(neighbour) == false) {
+								neighbourCost = costToNeighbour;
+								float h = getHeuristicCost(neighbouringX, neighbouringY, gx, gy);
+								neighbour.setHeur(h);
+							}
+						}
+					}
+				}
 
 		}
 
+		Route route = new Route();
+		Grid goal = gridpositions[gx][gy];
+		while(!(goal.compareTo(gridpositions[ax][ay]) == 0)) {
+			// TODO add to the beginning of the list 
+			route.appendStep(goal.getX(), goal.getY());
+		}
+		
+		route.appendStep(ax, ay);
+		return route;
 	}
 
 	/**
