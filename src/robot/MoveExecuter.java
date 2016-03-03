@@ -8,117 +8,136 @@ import lejos.robotics.navigation.DifferentialPilot;
  * robot.
  */
 public class MoveExecuter implements Runnable {
-    private static final int SENSOR_NOISE = 5;
 
-    private final LightSensor left;
-    private final LightSensor right;
-    private final DifferentialPilot pilot;
-    private final ServerConnection server;
-    private int leftPrevious;
-    private int rightPrevious;
+	private static final int SENSOR_NOISE = 3;
+	// Determined through testing
 
-    public MoveExecuter(
-            ServerConnection server,
-            DifferentialPilot pilot,
-            LightSensor left,
-            LightSensor right)
-    {
-        this.server = server;
-        this.pilot = pilot;
-        this.left = left;
-        this.right = right;
-        
-        this.leftPrevious = left.readValue();
-        this.rightPrevious = right.readValue();
-    }
+	private final LightSensor left;
+	private final LightSensor right;
+	private final DifferentialPilot pilot;
+	private final ServerConnection server;
 
-    @Override
-    public void run() {
+	private int leftPrevious;
+	private int rightPrevious;
 
-        while (true) {
-            final Move move = server.getNextMove();
+	public MoveExecuter(ServerConnection server, DifferentialPilot pilot, LightSensor left, LightSensor right) {
+		this.server = server;
+		this.pilot = pilot;
+		this.left = left;
+		this.right = right;
 
-            switch (move.type) {
-            case MOVE_FORWARD:
-                this.moveForward(move.getUnits());
-                break;
+		this.leftPrevious = left.readValue();
+		this.rightPrevious = right.readValue();
+	}
 
-            case TURN_LEFT:    
-                this.pilot.rotate(-90);
-                break;
+	@Override
+	public void run() {
 
-            case TURN_RIGHT:
-                this.pilot.rotate(90);
-                break;
+		while (true) {
+			final Move move = server.getNextMove();
 
-            case TURN_AROUND:
-                this.pilot.rotate(180);
-                break;
-            }
+			switch (move.type) {
+			case MOVE_FORWARD:
+				this.moveForward(move.getUnits());
+				break;
 
-            server.confirmMove();
-        }
-    }
+			case TURN_LEFT:
+				this.pilot.rotate(-90);
+				break;
 
-    private boolean compareReadings(int r1, int r2) {
-        if (r1 + SENSOR_NOISE < r2 - SENSOR_NOISE) {
-            
-        } else if (r1 - SENSOR_NOISE > r2 + SENSOR_NOISE) {
-            
-        }
-    }
+			case TURN_RIGHT:
+				this.pilot.rotate(90);
+				break;
 
-    /**
-     * Returns true if the left sensor detects a grid line, false otherwise.
-     */
-    private boolean leftIsDark() {
-        final int reading = this.left.readValue();
-        if (reading + SENSOR_NOISE < leftPrevious - SENSOR_NOISE)
-    }
+			case TURN_AROUND:
+				this.pilot.rotate(180);
+				break;
+			}
 
-    /**
-     * Returns true if the right sensor detects a grid line, false otherwise.
-     */
-    private boolean rightIsDark() {
-        return false;
-    }
+			server.confirmMove();
+		}
+	}
 
-    /**
-     * Moves the robot forward the specified number of units (grid tiles).
-     */
-    private void moveForward(int units) {
-        this.pilot.forward();
+	/**
+	 * Returns a negative integer if r1 is dark compared to r2. Returns 0 if r1
+	 * is considered equal to r2. Returns a positive integer if r1 is light
+	 * compared to r2.
+	 */
+	private int compareReadings(int r1, int r2) {
 
-        final Timer timer = new Timer();
-        int passed = 0;
+		// Difference between light and dark as a multiple of the noise
+		// (determined through testing)
+		final int diff = SENSOR_NOISE * 2;
 
-        while (passed < units) {
-            final boolean left = this.leftIsDark();
-            final boolean right = this.rightIsDark();
+		if (r1 + diff < r2 - diff) {
+			return -1;
+		} else if (r1 - diff > r2 + diff) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 
-            if (left && right) {
-                // Going over a junction
+	/**
+	 * Returns true if the left sensor detects a grid line, false otherwise.
+	 */
+	private boolean isNextLeftReadingDark() {
+		final int reading = this.left.readValue();
 
-                // Prevent `passed` from being incremented more than once per
-                // junction:
-                if (!timer.isRunning()) {
-                    passed++;
-                    timer.runFor((1.0 / this.pilot.getTravelSpeed()) * 0.1);
-                }
-            } else if (left) {
-                this.pilot.rotate(5);
-            } else if (right) {
-                this.pilot.rotate(-5);
-            }
+		final boolean result = this.compareReadings(reading, this.leftPrevious) < 0;
 
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                // Never happens
-                throw new RuntimeException("MoveExecuter interrupted");
-            }
-        }
+		this.leftPrevious = reading;
+		return result;
+	}
 
-        this.pilot.stop();
-    }
+	/**
+	 * Returns true if the right sensor detects a grid line, false otherwise.
+	 */
+	private boolean isNextRightReadingDark() {
+		final int reading = this.right.readValue();
+
+		final boolean result = this.compareReadings(reading, this.rightPrevious) < 0;
+
+		this.rightPrevious = reading;
+		return result;
+	}
+
+	/**
+	 * Moves the robot forward the specified number of units (grid tiles).
+	 */
+	private void moveForward(int units) {
+		this.pilot.forward();
+
+		final Timer timer = new Timer();
+		int passed = 0;
+
+		while (passed < units) {
+			final boolean left = this.isNextLeftReadingDark();
+			final boolean right = this.isNextRightReadingDark();
+
+			if (left && right) {
+				// Going over a junction
+
+				// Prevent `passed` from being incremented more than once per
+				// junction:
+				if (!timer.isRunning()) {
+					passed++;
+					timer.runFor((1.0 / this.pilot.getTravelSpeed()) * 0.1);
+				}
+			} else if (left) {
+				this.pilot.rotate(5);
+			} else if (right) {
+				this.pilot.rotate(-5);
+			}
+
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				// Never happens
+				throw new RuntimeException("MoveExecuter interrupted");
+			}
+		}
+
+		this.pilot.stop();
+	}
 }
