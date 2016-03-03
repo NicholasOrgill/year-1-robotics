@@ -59,9 +59,45 @@ public class Assigner extends Thread implements IAssigner, Runnable {
 			// }
 
 			// TODO: Multi robot
-			ArrayList<Integer> weight = new ArrayList<Integer>(warehouse.getRobotCount());
+			Integer[] weight = new Integer[warehouse.getRobotCount()];
 			ArrayList<ArrayList<IPick>> picks = new ArrayList<ArrayList<IPick>>(warehouse.getRobotCount());
-			ArrayList<Integer> bidVal = new ArrayList<Integer>(warehouse.getRobotCount());
+			Integer[] bidVal = new Integer[warehouse.getRobotCount()];
+
+			ArrayList<IPick> remainingPicks = new ArrayList<IPick>();
+			remainingPicks = warehouse.getNextIncompleteJob().getUnassignedPicks();
+
+			while (picks.size() > 0) {
+
+				// Reset the bids
+				for (int i = 0; i < warehouse.getRobotCount(); i++)
+					bidVal[i] = Integer.MAX_VALUE;
+
+				// get the bidVal for each robot
+				for (int i = 0; i < warehouse.getRobotCount(); i++) {
+					// check that the robot can accept the pick
+					if (weight[i] + remainingPicks.get(0).getWeight() <= 50) {
+						picks.get(i).add(remainingPicks.get(0));
+						ArrayList<IPick> orderedPicks = orderPicks(picks.get(i));
+						ArrayList<GridPose> gridPoses = new ArrayList<GridPose>();
+						for (IPick pick : orderedPicks)
+							gridPoses.add(pick.getPose());
+						bidVal[i] = routePlanner.getRoute(gridPoses).getLength();
+						picks.get(i).remove(picks.get(i).size() - 1);
+					}
+				}
+
+				int bestBid = bidVal[0];
+				int bestIndex = 0;
+				for (int i = 1; i < warehouse.getRobotCount(); i++) {
+					if (bidVal[i] < bestBid) {
+						bestBid = bidVal[i];
+						bestIndex = i;
+					}
+				}
+
+				picks.get(bestIndex).add(remainingPicks.get(0));				
+				remainingPicks.remove(0);
+			}
 
 		}
 

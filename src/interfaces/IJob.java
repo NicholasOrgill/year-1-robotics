@@ -27,19 +27,19 @@ public interface IJob {
 	public int getReward();
 
 	/**
-	 * Get whether the job is complete
+	 * Get the job state
 	 * 
-	 * @return Whether the job is complete
+	 * @return The job state
 	 */
-	public boolean getComplete();
+	public JobState getState();
 
 	/**
-	 * Set whether the job is complete
+	 * Set the job state
 	 * 
 	 * @param _complete
 	 *            Whether the job is complete
 	 */
-	public void setComplete(boolean _complete);
+	public void setState(JobState _jobState);
 
 	/**
 	 * Get the next unassigned pick

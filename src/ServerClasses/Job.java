@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import interfaces.IJob;
 import interfaces.IPick;
+import interfaces.JobState;
 import interfaces.PickState;
 
 public class Job implements IJob {
 
 	private ArrayList<IPick> picks;
-	private boolean complete;
+	private JobState state;
 
 	@Override
 	public ArrayList<IPick> getPicks() {
@@ -28,22 +29,12 @@ public class Job implements IJob {
 	}
 
 	@Override
-	public boolean getComplete() {
-		return complete;
-	}
-
-	@Override
-	public void setComplete(boolean _complete) {
-		complete = _complete;
-	}
-
-	@Override
 	public IPick getNextUnassignedPick() {
 		for (IPick p : picks) {
 			if (p.getPickState() == PickState.INACTIVE)
 				return p;
 		}
-		setComplete(true);
+		setState(JobState.FULLY_ASSIGNED);
 		return null;
 	}
 
@@ -51,6 +42,16 @@ public class Job implements IJob {
 	public ArrayList<IPick> getUnassignedPicks() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public JobState getState() {
+		return state;
+	}
+
+	@Override
+	public void setState(JobState _jobState) {
+		state = _jobState;
 	}
 
 }
