@@ -8,7 +8,7 @@ import interfaces.IRoutePlanner;
 import interfaces.IWarehouse;
 import rp.robotics.navigation.GridPose;
 
-public class Assigner extends Thread implements IAssigner, Runnable {
+public class Assigner extends Thread implements IAssigner {
 
 	private IWarehouse warehouse;
 	private IRoutePlanner routePlanner;
