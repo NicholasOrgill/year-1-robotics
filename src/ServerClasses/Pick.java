@@ -54,10 +54,12 @@ public class Pick implements IPick {
 		state = _pickState;
 	}
 
+	@Override
 	public GridPose getPose() {
 		return item.getPose();
 	}
 
+	@Override
 	public void setPose(GridPose _pose) {
 		item.setPose(_pose);
 	}
