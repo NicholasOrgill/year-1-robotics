@@ -1,17 +1,28 @@
 package robot;
 
+import java.util.LinkedList;
+
 public class MockServerConnection implements ServerConnection {
+    private final LinkedList<Move> moves = new LinkedList<>();
 
-	@Override
-	public Move getNextMove() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public MockServerConnection() {
+        moves.add(Move.forward(1));
+        moves.add(Move.turnAround());
+        moves.add(Move.forward(3));
+        moves.add(Move.turnLeft());
+    }
 
-	@Override
-	public void confirmMove() {
-		// TODO Auto-generated method stub
+    @Override
+    public Move getNextMove() {
+        if (moves.isEmpty()) {
+            return null;
+        } else {
+            return moves.remove(0);
+        }
+    }
 
-	}
+    @Override
+    public void confirmMove() {
 
+    }
 }
