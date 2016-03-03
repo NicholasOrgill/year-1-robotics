@@ -226,8 +226,13 @@ public class FindRouteAStar implements RouteFinder {
 	 *            The Y coord of the latter
 	 * @return Whether the location is physically reachable
 	 */
-	private boolean isItAllowed(int ax, int ay, int gx, int gy) {
-
+	private boolean isItAllowed(int ax, int ay, int somex, int somey) {
+		// TODO check location of walls and add them as not allowed
+		// TODO x<0 and y<0 should not be allowed as well
+		// TODO if somex and somey are the same as ax and ay 
+		// they should not be allowed as well
+		// might help circumvent a drawback of the Manhattan distance heuristic
+		// as well as prevent looping in circles.
 	}
 
 	/*****************
