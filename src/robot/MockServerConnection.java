@@ -14,11 +14,7 @@ public class MockServerConnection implements ServerConnection {
 
     @Override
     public Move getNextMove() {
-        if (moves.isEmpty()) {
-            return null;
-        } else {
-            return moves.remove(0);
-        }
+        return moves.remove(0);
     }
 
     @Override

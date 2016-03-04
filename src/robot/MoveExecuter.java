@@ -9,8 +9,19 @@ import lejos.robotics.navigation.DifferentialPilot;
  */
 public class MoveExecuter implements Runnable {
 
+    /** Noise of the light sensor (determined through testing). */
     private static final int SENSOR_NOISE = 3;
-    // Determined through testing
+
+    /**
+     * Difference between light and dark readings (determined through testing).
+     */
+    private static final int LIGHT_DIFF = 5;
+
+    /**
+     * Compares the two given readings, taking sensor noise into account.
+     */
+    private static int compareTo(int r1, int r2) {
+    }
 
     private final LightSensor left;
     private final LightSensor right;
@@ -60,33 +71,12 @@ public class MoveExecuter implements Runnable {
     }
 
     /**
-     * Returns a negative integer if r1 is dark compared to r2. Returns 0 if r1
-     * is considered equal to r2. Returns a positive integer if r1 is light
-     * compared to r2.
-     */
-    private int compareReadings(int r1, int r2) {
-
-        // Difference between light and dark as a multiple of the noise
-        // (determined through testing)
-        final int diff = SENSOR_NOISE * 2;
-
-        if (r1 + diff < r2 - diff) {
-            return -1;
-        } else if (r1 - diff > r2 + diff) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
      * Returns true if the left sensor detects a grid line, false otherwise.
      */
     private boolean isNextLeftReadingDark() {
         final int reading = this.left.readValue();
 
-        final boolean result = this.compareReadings(reading,
-                this.leftPrevious) < 0;
+        final boolean result = isDarkComparedTo(reading, this.leftPrevious);
 
         this.leftPrevious = reading;
         return result;
@@ -98,8 +88,7 @@ public class MoveExecuter implements Runnable {
     private boolean isNextRightReadingDark() {
         final int reading = this.right.readValue();
 
-        final boolean result = this.compareReadings(reading,
-                this.rightPrevious) < 0;
+        final boolean result = isDarkComparedTo(reading, this.rightPrevious);
 
         this.rightPrevious = reading;
         return result;

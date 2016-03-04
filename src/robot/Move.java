@@ -76,23 +76,4 @@ public final class Move {
     public int getUnits() {
         return this.units.get();
     }
-
-    /*
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof Move)) {
-            return false;
-        } else if (obj == this) {
-            return true;
-        }
-
-        final Move other = (Move) obj;
-        return this.type == other.type && this.units.equals(other.units);
-    }
-
-    @Override
-    public int hashCode() {
-
-    }
-    */
 }
