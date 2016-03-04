@@ -1,35 +1,58 @@
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import ServerClasses.Assigner;
 import ServerClasses.Item;
 import ServerClasses.Job;
 import ServerClasses.Pick;
+import ServerClasses.Robot;
 import ServerClasses.RouteExecutor;
 import ServerClasses.RoutePlanner;
 import ServerClasses.Warehouse;
+import interfaces.IItem;
+import interfaces.IJob;
 import interfaces.IPick;
+import interfaces.IRobot;
 import rp.robotics.navigation.GridPose;
 import rp.robotics.navigation.Heading;
 
 public class RobotWarehouse {
 
+	private final static String path = "C:/Users/Daniel/Desktop/warehouse/";
+	private final static String jobsPath = path + "jobs.csv";
+	private final static String locationsPath = path + "locations.csv";
+	private final static String itemsPath = path + "items.csv";
+	private final String cancellationsPath = path + "cancellations.csv";
+	private final static String dropsPath = path + "drops.csv";
+
 	public static void main(String[] args) {
 
 		final int timeStepDelay = 10000; // Ten second delay example
 
+		ArrayList<IItem> items;
+		ArrayList<IJob> jobs;
+		ArrayList<IRobot> robots;
+
 		// parse the files
-		// TODO: Parse the files into the job, pick and item lists.
+		items = new ArrayList<IItem>();
+		jobs = new ArrayList<IJob>();
+		readFile(jobs, items, itemsPath);
+		readFile(jobs, items, locationsPath);
+		items.removeAll(Collections.singleton(null));
+		readFile(jobs, items, jobsPath);
+		System.out.println(jobs);
+
+		robots = new ArrayList<IRobot>();
+		robots.add(new Robot());
 
 		// create the other systems
-		Warehouse warehouse = new Warehouse();
+		//TODO: add grid map
+		Warehouse warehouse = new Warehouse(jobs, robots, null);
 		RoutePlanner routePlanner = new RoutePlanner();
 		Assigner assigner = new Assigner(warehouse, routePlanner, 0);
 		RouteExecutor routeExecutor = new RouteExecutor(warehouse, timeStepDelay);
@@ -40,15 +63,6 @@ public class RobotWarehouse {
 
 	}
 
-	private final static String path = "C:/Users/Daniel/Desktop/warehouse/";
-	private final static String jobsPath = path + "jobs.csv";
-	private final static String locationsPath = path + "locations.csv";
-	private final static String itemsPath = path + "items.csv";
-	private final String cancellationsPath = path + "cancellations.csv";
-	private final static String dropsPath = path + "drops.csv";
-	private static ArrayList<Item> items;
-	private static ArrayList<Job> jobs;
-
 	private static boolean isEven(int i) {
 		if (i % 2 == 0) {
 			return true;
@@ -56,12 +70,12 @@ public class RobotWarehouse {
 			return false;
 	}
 
-	private static void storeItems(String line) {
+	private static void storeItems(ArrayList<IItem> items, String line) {
 		String[] splits = line.split(",");
 		items.add(new Item(splits[0], Double.parseDouble(splits[1]), Double.parseDouble(splits[2])));
 	}
 
-	private static void addLocations(String line) {
+	private static void addLocations(ArrayList<IItem> items, String line) {
 		// TODO SO inefficient
 		String[] splits = line.split(",");
 		int i = 0;
@@ -74,7 +88,7 @@ public class RobotWarehouse {
 		}
 	}
 
-	private static Item getItem(String item) {
+	private static IItem getItem(ArrayList<IItem> items, String item) {
 		int i = 0;
 		while (i < items.size() && !items.get(i).getName().equals(item)) {
 			i++;
@@ -86,21 +100,21 @@ public class RobotWarehouse {
 		}
 	}
 
-	private static void storeInfo(String fileName, String line) {
+	private static void storeInfo(ArrayList<IJob> jobs, ArrayList<IItem> items, String fileName, String line) {
 		switch (fileName) {
 		case itemsPath:
-			storeItems(line);
+			storeItems(items, line);
 			break;
 		case locationsPath:
-			addLocations(line);
+			addLocations(items, line);
 			break;
 		case jobsPath:
-			storeJobs(line);
+			storeJobs(jobs, items, line);
 			break;
 		}
 	}
 
-	private static void storeJobs(String line) {
+	private static void storeJobs(ArrayList<IJob> jobs, ArrayList<IItem> items, String line) {
 		String[] splits = line.split(",");
 		int jobID = Integer.parseInt(splits[0]);
 		ArrayList<IPick> picks = new ArrayList<IPick>();
@@ -109,7 +123,7 @@ public class RobotWarehouse {
 		for (int i = 1; i < splits.length; i++) {
 			if (isEven(i)) {
 				amount = Integer.parseInt(splits[i]);
-				picks.add(new Pick(getItem(item), amount));
+				picks.add(new Pick(getItem(items, item), amount));
 				amount = 0;
 				item = null;
 			} else {
@@ -120,13 +134,13 @@ public class RobotWarehouse {
 		jobs.add(new Job(jobID, picks));
 	}
 
-	private static void readFile(String fileName) {
+	private static void readFile(ArrayList<IJob> jobs, ArrayList<IItem> items, String fileName) {
 		try {
 			String line = null;
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
 			int i = 0;
 			while ((line = bufferedReader.readLine()) != null) {
-				storeInfo(fileName, line);
+				storeInfo(jobs, items, fileName, line);
 				i++;
 			}
 			bufferedReader.close();
