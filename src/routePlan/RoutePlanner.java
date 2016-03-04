@@ -7,7 +7,7 @@ package routePlan;
  * @author Chris II
  * 29IIMMXVI
  */
-public interface RouteFinder {
+public interface RoutePlanner {
 	/**
 	 * The following convention is used in classes created by me:
 	 * 

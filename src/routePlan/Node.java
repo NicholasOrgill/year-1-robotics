@@ -9,7 +9,7 @@ package routePlan;
  * LIBDAYIIIMMXVI
  *
  */
-public class Grid {
+public class Node {
 	
 	private int x,y;
 	// heuristical cost
@@ -24,7 +24,7 @@ public class Grid {
 	 * @param x The X coord of the location on the grid
 	 * @param y The Y coord of the location on the grid
 	 */
-	public Grid(int x, int y) {
+	public Node(int x, int y) {
 		this.x=x;
 		this.y=y;
 	}

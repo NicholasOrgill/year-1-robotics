@@ -10,20 +10,20 @@ import java.util.ArrayList;
  * IIIIMMXVI, LIBDAYIII
  *
  */
-public class FindRouteAStar implements AStarHeur, RouteFinder {
+public class FindRouteAStar implements AStarHeur, RoutePlanner {
 
 	// [AMENDABLE] The heuristic to be utilised
 	// pass an appropriate heuristic
 	private AStarHeur heur;
 
 	// The nodes that have already been explored by the search algorithm
-	private ArrayList<Grid> explored = new ArrayList<Grid>();
+	private ArrayList<Node> explored = new ArrayList<Node>();
 
 	// The nodes that still have not been explored by the latter
-	private ArrayList<Grid> open = new ArrayList<Grid>();
+	private ArrayList<Node> open = new ArrayList<Node>();
 
 	// The set of positions in the grid where movement will take place
-	private Grid[][] gridpositions;
+	private Node[][] gridpositions;
 
 	/**
 	 * Constructor for the route finder
@@ -36,10 +36,10 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 
 		// TODO Retrieve grid dimensions, placeholders for now
 		// 
-		gridpositions = new Grid[w][h];
+		gridpositions = new Node[w][h];
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
-				gridpositions[x][y] = new Grid(x, y);
+				gridpositions[x][y] = new Node(x, y);
 			}
 		}
 	}
@@ -61,7 +61,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 		while (open.size() > 0) {
 			// TODO get first state in open list
 			// should have the best heuristical outcome
-			Grid present = getOpenFirst();
+			Node present = getOpenFirst();
 			if(present == gridpositions[gx][gx]) {
 				// stop search, reached goal node
 			}
@@ -89,7 +89,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 							// cost to move, typically 1, as it is one position away from the next direct
 							float costToNeighbour = present.getCost() + 1;
 							
-							Grid neighbour = gridpositions[neighbouringX][neighbouringY];
+							Node neighbour = gridpositions[neighbouringX][neighbouringY];
 						
 							float neighbourCost = neighbour.getCost();
 							// need to check whether that node has been considered before
@@ -116,7 +116,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 		}
 
 		Route route = new Route();
-		Grid goal = gridpositions[gx][gy];
+		Node goal = gridpositions[gx][gy];
 		while(!(goal.compareTo(gridpositions[ax][ay]) == 0)) {
 			// TODO add to the beginning of the list 
 			route.appendStep(goal.getX(), goal.getY());
@@ -132,8 +132,8 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 * @return The element with index 0 in the list of open positions (still
 	 *         unexplored)
 	 */
-	private Grid getOpenFirst() {
-		return (Grid) open.get(0);
+	private Node getOpenFirst() {
+		return (Node) open.get(0);
 	}
 
 	/*****************
@@ -146,7 +146,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 * @param position
 	 *            The position to add to the open list
 	 */
-	private void addOpen(Grid position) {
+	private void addOpen(Node position) {
 		open.add(position);
 	}
 
@@ -156,7 +156,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 * @param position
 	 *            The position to be added to the explored list
 	 */
-	private void addExplored(Grid position) {
+	private void addExplored(Node position) {
 		explored.add(position);
 	}
 
@@ -170,7 +170,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 * @param position
 	 *            The position to remove from the open list
 	 */
-	private void removeOpen(Grid position) {
+	private void removeOpen(Node position) {
 		open.remove(position);
 	}
 
@@ -181,7 +181,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 * @param position
 	 *            The position to remove from the explored list
 	 */
-	private void removeExplored(Grid position) {
+	private void removeExplored(Node position) {
 		explored.remove(position);
 	}
 
@@ -196,7 +196,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 *            The position to be checked against
 	 * @return Whether the position is in the open list
 	 */
-	private boolean isItOpen(Grid position) {
+	private boolean isItOpen(Node position) {
 		return open.contains(position);
 	}
 
@@ -207,7 +207,7 @@ public class FindRouteAStar implements AStarHeur, RouteFinder {
 	 *            The position to be checked against
 	 * @return Whether the position is in the already explored list
 	 */
-	private boolean isItExplored(Grid position) {
+	private boolean isItExplored(Node position) {
 		return explored.contains(position);
 	}
 
