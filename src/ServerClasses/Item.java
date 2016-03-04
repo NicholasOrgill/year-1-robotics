@@ -10,7 +10,9 @@ public class Item implements IItem {
 	private double weight;
 	
 	public Item(String _name, double _reward, double _weight) {
-		
+		name = _name;
+		reward = _reward;
+		weight = _weight;
 	}
 
 	@Override
