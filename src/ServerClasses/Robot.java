@@ -23,26 +23,22 @@ public class Robot implements IRobot {
 	
 	@Override
 	public GridPose getPose() {
-		// TODO Auto-generated method stub
-		return null;
+		return pose;
 	}
 
 	@Override
 	public void setPose(GridPose _pose) {
-		// TODO Auto-generated method stub
-
+		pose = _pose;
 	}
 
 	@Override
 	public RobotState getState() {
-		// TODO Auto-generated method stub
-		return null;
+		return state;
 	}
 
 	@Override
 	public void setState(RobotState _state) {
-		// TODO Auto-generated method stub
-
+		state = _state;
 	}
 
 	@Override
@@ -53,32 +49,29 @@ public class Robot implements IRobot {
 
 	@Override
 	public void assignPicks(ArrayList<IPick> _picks) {
-		// TODO Auto-generated method stub
-
+		picks = _picks;
+		setState(RobotState.WAITING_FOR_ROUTE);
 	}
 
 	@Override
 	public IRoute getRoute() {
-		// TODO Auto-generated method stub
-		return null;
+		return route;
 	}
 
 	@Override
 	public void setRoute(IRoute _route) {
-		// TODO Auto-generated method stub
-
+		route = _route;
 	}
 
 	@Override
 	public ArrayList<IPick> getPicks() {
-		// TODO Auto-generated method stub
-		return null;
+		return picks;
 	}
 
 	@Override
 	public void sendMessage(IMessage _message) {
 		// TODO Auto-generated method stub
-
+ 
 	}
 
 	@Override
