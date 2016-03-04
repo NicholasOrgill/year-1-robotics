@@ -6,20 +6,21 @@ import java.util.ArrayList;
  * A class that uses A Star search and a heuristic to determine a route to be
  * taken by a robot
  * 
- * @author Chris I IIIIMMXVI
+ * @author Chris I 
+ * IIIIMMXVI, LIBDAYIII
  *
  */
-public class FindRouteAStar implements RouteFinder {
+public class FindRouteAStar implements AStarHeur, RouteFinder {
 
 	// [AMENDABLE] The heuristic to be utilised
 	// pass an appropriate heuristic
 	private AStarHeur heur;
 
 	// The nodes that have already been explored by the search algorithm
-	private ArrayList explored = new ArrayList();
+	private ArrayList<Grid> explored = new ArrayList<Grid>();
 
 	// The nodes that still have not been explored by the latter
-	private ArrayList open = new ArrayList();
+	private ArrayList<Grid> open = new ArrayList<Grid>();
 
 	// The set of positions in the grid where movement will take place
 	private Grid[][] gridpositions;
@@ -255,5 +256,11 @@ public class FindRouteAStar implements RouteFinder {
 	 */
 	public float getHeuristicCost(int x, int y, int gx, int gy) {
 		return heur.getCost(x, y, gx, gy);
+	}
+
+	@Override
+	public float getCost(int x, int y, int gx, int gy) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
