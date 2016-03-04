@@ -8,7 +8,13 @@ import rp.robotics.navigation.GridPose;
 public class Pick implements IPick {
 
 	private IItem item;
+	private int amount;
 	PickState state;
+
+	public Pick(IItem _item, int _amount) {
+		item = _item;
+		amount = _amount;
+	}
 
 	@Override
 	public IItem getItem() {
@@ -21,27 +27,25 @@ public class Pick implements IPick {
 	}
 
 	@Override
-	public int getReward() {
+	public double getReward() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int getWeight() {
+	public double getWeight() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getAmount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return amount;
 	}
 
 	@Override
 	public void setAmount(int _amount) {
-		// TODO Auto-generated method stub
-
+		amount = _amount;
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public interface IJob {
 	 * 
 	 * @return The reward for the job
 	 */
-	public int getReward();
+	public double getReward();
 
 	/**
 	 * Get the job state

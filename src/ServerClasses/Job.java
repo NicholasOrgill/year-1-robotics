@@ -11,6 +11,13 @@ public class Job implements IJob {
 
 	private ArrayList<IPick> picks;
 	private JobState state;
+	private int jobID;
+
+	public Job(int _jobID, ArrayList<IPick> _picks) {
+		jobID = _jobID;
+		picks = _picks;
+		state = JobState.NOT_STARTED;
+	}
 
 	@Override
 	public ArrayList<IPick> getPicks() {
@@ -23,7 +30,7 @@ public class Job implements IJob {
 	}
 
 	@Override
-	public int getReward() {
+	public double getReward() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -52,6 +59,14 @@ public class Job implements IJob {
 	@Override
 	public void setState(JobState _jobState) {
 		state = _jobState;
+	}
+
+	public int getJobID() {
+		return jobID;
+	}
+
+	public void setJobID(int jobID) {
+		this.jobID = jobID;
 	}
 
 }
