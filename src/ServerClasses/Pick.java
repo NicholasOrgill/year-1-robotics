@@ -14,6 +14,7 @@ public class Pick implements IPick {
 	public Pick(IItem _item, int _amount) {
 		item = _item;
 		amount = _amount;
+		state = PickState.INACTIVE;
 	}
 
 	@Override
@@ -28,14 +29,12 @@ public class Pick implements IPick {
 
 	@Override
 	public double getReward() {
-		// TODO Auto-generated method stub
-		return 0;
+		return item.getReward() * getAmount();
 	}
 
 	@Override
 	public double getWeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return item.getWeight() * getAmount();
 	}
 
 	@Override

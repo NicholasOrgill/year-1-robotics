@@ -1,143 +1,84 @@
 package ServerClasses;
-import interfaces.IRoute;
-
-import interfaces.*;
-import rp.robotics.navigation.GridPose;
 
 import java.util.ArrayList;
 
-import static interfaces.IMessage.fromString;
-
+import interfaces.IMessage;
+import interfaces.IPick;
+import interfaces.IRobot;
+import interfaces.IRoute;
+import interfaces.RobotState;
+import rp.robotics.navigation.GridPose;
 
 public class Robot implements IRobot {
-    private final String address;
-    private int id;
-    private Connection connection;
-    private RobotState state;
-    private GridPose pose;
-    private ArrayList<IPick> picks;
-    private IRoute route;
 
-    public Robot(int id, String addr) {
-            this.id = id;
-            this.address = addr;
-            picks = new ArrayList<>();
-            state = RobotState.WAITING_FOR_PICKS;
-    }
+	private RobotState state;
+	private GridPose pose;
+	private ArrayList<IPick> picks;
+	private IRoute route;
+	
+	public Robot(){
+		picks = new ArrayList<IPick>();
+		state = RobotState.WAITING_FOR_PICKS;
+	}
+	
+	@Override
+	public GridPose getPose() {
+		return pose;
+	}
 
-    /**
-     * Get the robots position on the grid
-     *
-     * @return The robots position on the grid
-     */
-    @Override
-    public GridPose getPose() {
-        return null;
-    }
+	@Override
+	public void setPose(GridPose _pose) {
+		pose = _pose;
+	}
 
-    /**
-     * Set the robots position on the grid
-     *
-     * @param _pose The new position of the robot
-     */
-    @Override
-    public void setPose(GridPose _pose) {
+	@Override
+	public RobotState getState() {
+		return state;
+	}
 
-    }
+	@Override
+	public void setState(RobotState _state) {
+		state = _state;
+	}
 
-    /**
-     * Get the state of the robot
-     *
-     * @return The state of the robot
-     */
-    @Override
-    public RobotState getState() {
-        return null;
-    }
+	@Override
+	public void assignPick(IPick _pick) {
+		// TODO Auto-generated method stub
 
-    /**
-     * Set the state of the robot
-     *
-     * @param _state The new state of the robot
-     */
-    @Override
-    public void setState(RobotState _state) {
+	}
 
-    }
+	@Override
+	public void assignPicks(ArrayList<IPick> _picks) {
+		picks = _picks;
+		setState(RobotState.WAITING_FOR_ROUTE);
+	}
 
-    /**
-     * Assign a pick to the current robot
-     *
-     * @param _pick The pick to be assigned
-     */
-    @Override
-    public void assignPick(IPick _pick) {
+	@Override
+	public IRoute getRoute() {
+		return route;
+	}
 
-    }
+	@Override
+	public void setRoute(IRoute _route) {
+		route = _route;
+	}
 
-    /**
-     * Assign a list of picks to the robot
-     *
-     * @param _picks The list of picks to be assigned
-     */
-    @Override
-    public void assignPicks(ArrayList<IPick> _picks) {
+	@Override
+	public ArrayList<IPick> getPicks() {
+		return picks;
+	}
 
-    }
+	@Override
+	public void sendMessage(IMessage _message) {
+		// TODO Auto-generated method stub
+ 
+	}
 
-    /**
-     * Get the route for the robot
-     *
-     * @return The robots route
-     */
-    @Override
-    public IRoute getRoute() {
-        return null;
-    }
-
-    /**
-     * Set the route for the current position to the next pick
-     *
-     * @param _route The route
-     */
-    @Override
-    public void setRoute(IRoute _route) {
-
-    }
-
-    /**
-     * Get the list of picks for the robot
-     *
-     * @return The list of picks for the robot
-     */
-    @Override
-    public ArrayList<IPick> getPicks() {
-        return null;
-    }
-
-    /**
-     * Send a message to the physical robot
-     *
-     * @param _message
-     */
-    @Override
-    public void sendMessage(IMessage _message) {
-
-    }
-
-    /**
-     * Wait for a message to be received from the robot
-     *
-     * @return The message received from the robot
-     */
-    @Override
-    public IMessage receiveMessage() {
-        try {
-            return fromString(connection.getReceivedQueue().take());
-        } catch (InterruptedException e) {
-            return null;
-        }
-    }
+	@Override
+	public IMessage receiveMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     /**
      * Returns the robot's unique identifier.
@@ -146,7 +87,7 @@ public class Robot implements IRobot {
      */
     @Override
     public int getId() {
-        return id;
+        return 0;
     }
 
     /**
@@ -156,7 +97,7 @@ public class Robot implements IRobot {
      */
     @Override
     public String getAddress() {
-        return address;
+        return null;
     }
 
     /**
@@ -166,7 +107,7 @@ public class Robot implements IRobot {
      */
     @Override
     public void setConnection(Connection c) {
-        connection = c;
-    }
-}
 
+    }
+
+}
