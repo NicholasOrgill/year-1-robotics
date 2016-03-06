@@ -21,7 +21,7 @@ public class RobotDisplay implements Runnable, Observer{
 
 	@Override
 	public void run() {
-		System.out.println("Required: " + itemCount + "x " + itemName); //to be changed. in what format is the info for
+		System.out.println("Required: " + itemCount + "x " + itemName); //To be changed. in what format is the info for
 																		//items and item amount going to be given? 
 																		//ie. 3 banana 2 oranges 1 apple etc.
 																		// or will it be in the form of 2 arrays
