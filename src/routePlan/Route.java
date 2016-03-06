@@ -67,11 +67,20 @@ public class Route implements IRoute {
 		return getMove(i).getY();
 	}
 
-	// [PERHAPS] TODO Method to affix the starting position
-	// as the first item in the array /index 0/
+	/**
+	 * Affix a location to the front of the route i.e move it to position 0
+	 * 
+	 * @param x
+	 *            The x coord of the move
+	 * @param y
+	 *            The y coord of the move
+	 */
+	public void setFirstMove(int x, int y) {
+		moves.add(0, new Move(x, y));
+	}
 
 	/**
-	 * Prevent duplicates in the route Check whether a given by its coords move
+	 * Prevent duplicates in the route. Check whether a given by its coords move
 	 * is already present in the route
 	 * 
 	 * @param x
@@ -102,6 +111,11 @@ public class Route implements IRoute {
 		return moves.size();
 	}
 
+	/**
+	 * Return the route
+	 * 
+	 * @return The route
+	 */
 	@Override
 	public ArrayList<IMove> getRoute() {
 		return moves;
@@ -122,17 +136,24 @@ public class Route implements IRoute {
 	public void setRoute(ArrayList<IMove> route) {
 		// Trying to avoid making a copy of a list, so that there are not only pointers.
 		// to the objects but the objects themselves - truly independent lists.  
-		// Otherwise, if we change an element in the copied List, it will be changed in the original
-		// list too.
+		// Otherwise, if we change an element in the copied List, it will be changed
+		// in the original list too.
 		for(int i=0; i<moves.size(); i++) {
 			route.add(moves.get(i));
 		}
 	}
 
+	/**
+	 * Set a move to a given position in the route
+	 * 
+	 * @param i
+	 *            The index of the move to change
+	 * @param move
+	 *            The new move
+	 */
 	@Override
 	public void setMove(int i, IMove move) {
 		moves.set(i, move);
-
 	}
 
 }
