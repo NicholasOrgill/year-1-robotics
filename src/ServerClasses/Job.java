@@ -47,4 +47,10 @@ public class Job implements IJob {
 		return null;
 	}
 
+	@Override
+	public ArrayList<IPick> getUnassignedPicks() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

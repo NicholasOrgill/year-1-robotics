@@ -48,4 +48,11 @@ public interface IJob {
 	 */
 	public IPick getNextUnassignedPick();
 
+	/**
+	 * Get the remaining unassigned picks for the job
+	 * 
+	 * @return The remaining unassigned picks
+	 */
+	public ArrayList<IPick> getUnassignedPicks();
+
 }
