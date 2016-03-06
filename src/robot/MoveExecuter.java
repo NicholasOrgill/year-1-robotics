@@ -1,7 +1,9 @@
 package robot;
 
+import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.Delay;
 
 /**
  * A Runnable class that receives moves from the server and executes them on the
@@ -9,127 +11,102 @@ import lejos.robotics.navigation.DifferentialPilot;
  */
 public class MoveExecuter implements Runnable {
 
-    /** Noise of the light sensor (determined through testing). */
-    private static final int SENSOR_NOISE = 3;
+	private final LightSensor left;
+	private final LightSensor right;
 
-    /**
-     * Difference between light and dark readings (determined through testing).
-     */
-    private static final int LIGHT_DIFF = 5;
+	private final DifferentialPilot pilot;
+	private final ServerConnection server;
 
-    /**
-     * Compares the two given readings, taking sensor noise into account.
-     */
-    private static int compareTo(int r1, int r2) {
-    }
+	public MoveExecuter(ServerConnection server, DifferentialPilot pilot, LightSensor left, LightSensor right) {
+		this.server = server;
+		this.pilot = pilot;
+		this.left = left;
+		this.right = right;
 
-    private final LightSensor left;
-    private final LightSensor right;
-    private final DifferentialPilot pilot;
-    private final ServerConnection server;
+	}
 
-    private int leftPrevious;
-    private int rightPrevious;
+	@Override
+	public void run() {
 
-    public MoveExecuter(ServerConnection server, DifferentialPilot pilot,
-            LightSensor left, LightSensor right) {
-        this.server = server;
-        this.pilot = pilot;
-        this.left = left;
-        this.right = right;
+		while (true) {
+			final Move move = server.getNextMove();
 
-        this.leftPrevious = left.readValue();
-        this.rightPrevious = right.readValue();
-    }
+			switch (move.type) {
+			case MOVE_FORWARD:
+				this.moveForward(move.getUnits());
+				break;
 
-    @Override
-    public void run() {
+			case TURN_LEFT:
+				this.pilot.rotate(90);
+				break;
 
-        while (true) {
-            final Move move = server.getNextMove();
+			case TURN_RIGHT:
+				this.pilot.rotate(-90);
+				break;
 
-            switch (move.type) {
-            case MOVE_FORWARD:
-                this.moveForward(move.getUnits());
-                break;
+			case TURN_AROUND:
+				this.pilot.rotate(180);
+				break;
+			}
 
-            case TURN_LEFT:
-                this.pilot.rotate(-90);
-                break;
+			server.confirmMove();
+		}
+	}
 
-            case TURN_RIGHT:
-                this.pilot.rotate(90);
-                break;
+	/**
+	 * Returns true if the left sensor detects a grid line, false otherwise.
+	 */
+	private boolean isNextLeftReadingDark() {
+		int lefty = left.readValue();
 
-            case TURN_AROUND:
-                this.pilot.rotate(180);
-                break;
-            }
+		if (lefty < 33)
+			return true;
+		else
+			return false;
+	}
 
-            server.confirmMove();
-        }
-    }
+	/**
+	 * Returns true if the right sensor detects a grid line, false otherwise.
+	 */
+	private boolean isNextRightReadingDark() {
+		int righty = right.readValue();
 
-    /**
-     * Returns true if the left sensor detects a grid line, false otherwise.
-     */
-    private boolean isNextLeftReadingDark() {
-        final int reading = this.left.readValue();
+		if (righty < 33)
+			return true;
+		else
+			return false;
+	}
 
-        final boolean result = isDarkComparedTo(reading, this.leftPrevious);
+	/**
+	 * Moves the robot forward the specified number of units (grid tiles).
+	 */
+	private void moveForward(int units) {
 
-        this.leftPrevious = reading;
-        return result;
-    }
+		int passed = 0;
+		while (passed < units) {
+			this.pilot.forward();
+			
+			this.pilot.setTravelSpeed(150f);
 
-    /**
-     * Returns true if the right sensor detects a grid line, false otherwise.
-     */
-    private boolean isNextRightReadingDark() {
-        final int reading = this.right.readValue();
+			boolean left = this.isNextLeftReadingDark();
+			boolean right = this.isNextRightReadingDark();
 
-        final boolean result = isDarkComparedTo(reading, this.rightPrevious);
+			if (left && right) {
+				passed++;
+				Delay.msDelay(200);
+				pilot.travel(65);
+				LCD.drawString("Pass" + passed, 2, 3);
+			} 
+			
+			if (left) {
+				this.pilot.rotate(3, true);
+				Delay.msDelay(50);
+			} else if (right) {
+				this.pilot.rotate(-3, true);
+				Delay.msDelay(50);
+			}
 
-        this.rightPrevious = reading;
-        return result;
-    }
-
-    /**
-     * Moves the robot forward the specified number of units (grid tiles).
-     */
-    private void moveForward(int units) {
-        this.pilot.forward();
-
-        final Timer timer = new Timer();
-        int passed = 0;
-
-        while (passed < units) {
-            final boolean left = this.isNextLeftReadingDark();
-            final boolean right = this.isNextRightReadingDark();
-
-            if (left && right) {
-                // Going over a junction
-
-                // Prevent `passed` from being incremented more than once per
-                // junction:
-                if (!timer.isRunning()) {
-                    passed++;
-                    timer.runFor((1.0 / this.pilot.getTravelSpeed()) * 0.1);
-                }
-            } else if (left) {
-                this.pilot.rotate(5);
-            } else if (right) {
-                this.pilot.rotate(-5);
-            }
-
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                // Never happens
-                throw new RuntimeException("MoveExecuter interrupted");
-            }
-        }
-
-        this.pilot.stop();
-    }
+		}
+		this.pilot.stop();
+	}
 }

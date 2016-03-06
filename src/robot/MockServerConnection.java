@@ -1,15 +1,19 @@
 package robot;
 
+
 import java.util.LinkedList;
 
 public class MockServerConnection implements ServerConnection {
     private final LinkedList<Move> moves = new LinkedList<>();
 
     public MockServerConnection() {
-        moves.add(Move.forward(1));
-        moves.add(Move.turnAround());
-        moves.add(Move.forward(3));
+    	moves.add(Move.forward(2));
+    	moves.add(Move.turnLeft());
+    	moves.add(Move.forward(6));
         moves.add(Move.turnLeft());
+        moves.add(Move.forward(2));
+        moves.add(Move.turnLeft());
+        moves.add(Move.forward(6));
     }
 
     @Override

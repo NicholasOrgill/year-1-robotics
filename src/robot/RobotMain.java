@@ -1,5 +1,6 @@
 package robot;
 
+
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -12,9 +13,9 @@ public class RobotMain {
     public static void main(String[] args) throws InterruptedException {
         final MockServerConnection server = new MockServerConnection();
 
-        final DifferentialPilot pilot = new DifferentialPilot(0.062, // Wheel
+        final DifferentialPilot pilot = new DifferentialPilot(65f, // Wheel
                                                                      // diameter
-                0.163, // Track width
+                150f, // Track width
                 Motor.B, // Left wheel
                 Motor.C); // Right wheel
 

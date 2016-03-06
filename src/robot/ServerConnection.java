@@ -1,5 +1,6 @@
 package robot;
 
+
 /**
  * Represents a connection to the server.
  */
