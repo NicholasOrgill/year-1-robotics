@@ -128,7 +128,7 @@ public class Robot implements IRobot {
         try {
             return fromString(connection.getReceivedQueue().take());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            return null;
         }
     }
 
