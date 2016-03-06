@@ -21,14 +21,15 @@ public class RobotDisplay implements Runnable, Observer{
 
 	@Override
 	public void run() {
-		System.out.println("Required: " + itemCount + "x " + itemName); //To be changed. in what format is the info for
-																		//items and item amount going to be given? 
-																		//ie. 3 banana 2 oranges 1 apple etc.
-																		// or will it be in the form of 2 arrays
-																		//eg. 3 2 1 
-																		//	banana orage apple
-																		//and i'll have to loop over the array to display
-																		// the info? or something else entirely different?
+		//To be changed. in what format is the info for
+		//items and item amount going to be given?
+		//ie. 3 banana 2 oranges 1 apple etc.
+		// or will it be in the form of 2 arrays
+		//eg. 3 2 1
+		//	banana orage apple
+		//and i'll have to loop over the array to display
+		// the info? or something else entirely different?
+		System.out.println("Required: " + itemCount + "x " + itemName);
 		Delay.msDelay(5000);
 		
 		while(count != itemCount){
