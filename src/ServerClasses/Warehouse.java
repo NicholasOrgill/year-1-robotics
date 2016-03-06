@@ -82,7 +82,7 @@ public class Warehouse implements IWarehouse {
 	@Override
 	public IJob getNextIncompleteJob() {
 		for(IJob j : jobs){
-			if (j.getComplete() == false) return j;
+			if (!j.getComplete()) return j;
 		}
 		//TODO: if all jobs complete
 		return null;

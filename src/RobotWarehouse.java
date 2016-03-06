@@ -1,7 +1,10 @@
-import ServerClasses.Assigner;
-import ServerClasses.RouteExecutor;
-import ServerClasses.RoutePlanner;
-import ServerClasses.Warehouse;
+import ServerClasses.*;
+import interfaces.IJob;
+import interfaces.IRobot;
+import rp.robotics.mapping.GridMap;
+
+
+import java.util.ArrayList;
 
 public class RobotWarehouse {
 
@@ -11,9 +14,16 @@ public class RobotWarehouse {
 		
 		// parse the files
 		// TODO: Parse the files into the job, pick and item lists.
+		GridMap gridMap = new GridMap();
 
-		// create the other systems
-		Warehouse warehouse = new Warehouse();
+
+		ArrayList<IJob> jobs = new ArrayList<>(); // Todo: Add our list of jobs here.
+		ArrayList<IRobot> robots = new ArrayList<>(); // Todo: Add our list of robots here.
+
+		ConnectionManager manager = new ConnectionManager();
+		manager.addConnections(robots);
+
+		Warehouse warehouse = new Warehouse(jobs, robots, gridMap); // Todo: Instantiate Warehouse properly.
 		RoutePlanner routePlanner = new RoutePlanner();
 		Assigner assigner = new Assigner(warehouse, routePlanner, 0);
 		RouteExecutor routeExecutor = new RouteExecutor(warehouse, timeStepDelay);
@@ -21,6 +31,9 @@ public class RobotWarehouse {
 		// start the other systems
 		assigner.start();
 		routeExecutor.start();
+
+		// Block until all our connections have been closed.
+		manager.joinAll();
 
 	}
 
