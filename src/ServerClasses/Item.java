@@ -6,8 +6,15 @@ import rp.robotics.navigation.GridPose;
 public class Item implements IItem {
 
 	private String name;
-	private int reward;
+	private double reward;
+	private double weight;
 	
+	public Item(String _name, double _reward, double _weight) {
+		name = _name;
+		reward = _reward;
+		weight = _weight;
+	}
+
 	@Override
 	public String getName() {
 		return name;
@@ -19,26 +26,24 @@ public class Item implements IItem {
 	}
 
 	@Override
-	public int getReward() {
+	public double getReward() {
 		return reward;
 	}
 
 	@Override
-	public void setReward(int _reward) {
-		// TODO Auto-generated method stub
+	public void setReward(double _reward) {
+		reward = _reward;
 
 	}
 
 	@Override
 	public double getWeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return weight;
 	}
 
 	@Override
 	public void setWeight(double _weight) {
-		// TODO Auto-generated method stub
-
+		weight = _weight;
 	}
 
 	@Override
