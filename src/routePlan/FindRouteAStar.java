@@ -20,11 +20,11 @@ import rp.robotics.navigation.GridPose;
  *  'g' prefix to variable name = that variable at the end /goal/ 
  *
  */
-public class FindRouteAStar implements AStarHeur, IRoutePlanner {
+public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 
 	// [AMENDABLE] The heuristic to be utilised
 	// pass an appropriate heuristic
-	private AStarHeur heur;
+	private ManhattanHeur heur;
 
 	// The nodes that have already been explored by the search algorithm
 	private ArrayList<Node> explored = new ArrayList<Node>();
