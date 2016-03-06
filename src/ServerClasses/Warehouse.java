@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import interfaces.IJob;
 import interfaces.IRobot;
 import interfaces.IWarehouse;
+import interfaces.JobState;
 import rp.robotics.mapping.GridMap;
 
 public class Warehouse implements IWarehouse {
@@ -82,7 +83,7 @@ public class Warehouse implements IWarehouse {
 	@Override
 	public IJob getNextIncompleteJob() {
 		for(IJob j : jobs){
-			if (!j.getComplete()) return j;
+			if (j.getState() == JobState.NOT_STARTED) return j;
 		}
 		//TODO: if all jobs complete
 		return null;

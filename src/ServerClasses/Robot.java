@@ -1,4 +1,5 @@
 package ServerClasses;
+import interfaces.IRoute;
 
 import interfaces.*;
 import rp.robotics.navigation.GridPose;
@@ -12,10 +13,16 @@ public class Robot implements IRobot {
     private final String address;
     private int id;
     private Connection connection;
+    private RobotState state;
+    private GridPose pose;
+    private ArrayList<IPick> picks;
+    private IRoute route;
 
-    public Robot(int id, String address) {
-        this.id = id;
-        this.address = address;
+    public Robot(int id, String addr) {
+            this.id = id;
+            this.address = addr;
+            picks = new ArrayList<>();
+            state = RobotState.WAITING_FOR_PICKS;
     }
 
     /**
@@ -162,3 +169,4 @@ public class Robot implements IRobot {
         connection = c;
     }
 }
+

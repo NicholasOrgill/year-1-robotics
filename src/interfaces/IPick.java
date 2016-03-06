@@ -24,14 +24,14 @@ public interface IPick {
 	 * 
 	 * @return The reward for the pick
 	 */
-	public int getReward();
+	public double getReward();
 
 	/**
 	 * Get the total weight of the pick
 	 * 
 	 * @return The total weight of the pick
 	 */
-	public int getWeight();
+	public double getWeight();
 
 	/**
 	 * get the number of items in the pick
