@@ -1,5 +1,6 @@
 package RobotClasses;
 
 
-public class RobotSender {
+public class RobotSender extends Thread {
+
 }
