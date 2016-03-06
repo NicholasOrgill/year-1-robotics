@@ -1,3 +1,5 @@
+package RobotClasses;
+
 import java.util.Observable;
 import java.util.Observer;
 import lejos.nxt.Button;
