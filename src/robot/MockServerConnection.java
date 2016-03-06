@@ -2,6 +2,9 @@ package robot;
 
 import java.util.LinkedList;
 
+/**
+ * A fake ServerConnection implementation.
+ */
 public class MockServerConnection implements ServerConnection {
     private final LinkedList<Move> moves = new LinkedList<>();
 

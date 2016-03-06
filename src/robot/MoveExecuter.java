@@ -10,7 +10,7 @@ import lejos.robotics.navigation.DifferentialPilot;
 public class MoveExecuter implements Runnable {
 
     /** Noise of the light sensor (determined through testing). */
-    private static final int SENSOR_NOISE = 3;
+    private static final int SENSOR_NOISE = 1;
 
     /**
      * Difference between light and dark readings (determined through testing).
@@ -20,7 +20,14 @@ public class MoveExecuter implements Runnable {
     /**
      * Compares the two given readings, taking sensor noise into account.
      */
-    private static int compareTo(int r1, int r2) {
+    private static int compareReadings(int r1, int r2) {
+        if ((r2 - SENSOR_NOISE) - (r1 + SENSOR_NOISE) > LIGHT_DIFF) {
+            return -1;
+        } else if ((r1 - SENSOR_NOISE) - (r2 + SENSOR_NOISE) > LIGHT_DIFF) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private final LightSensor left;
@@ -28,11 +35,17 @@ public class MoveExecuter implements Runnable {
     private final DifferentialPilot pilot;
     private final ServerConnection server;
 
+    private Optional<Integer> leftLight = Optional.empty();
+    private Optional<Integer> rightLight = Optional.empty();
     private int leftPrevious;
     private int rightPrevious;
 
-    public MoveExecuter(ServerConnection server, DifferentialPilot pilot,
-            LightSensor left, LightSensor right) {
+    public MoveExecuter(
+            ServerConnection server,
+            DifferentialPilot pilot,
+            LightSensor left,
+            LightSensor right)
+    {
         this.server = server;
         this.pilot = pilot;
         this.left = left;
@@ -75,11 +88,35 @@ public class MoveExecuter implements Runnable {
      */
     private boolean isNextLeftReadingDark() {
         final int reading = this.left.readValue();
+        final int result = compareReadings(reading, this.leftPrevious);
 
-        final boolean result = isDarkComparedTo(reading, this.leftPrevious);
+        final boolean ret;
+        if (result < 0) {
+            // Reading is dark
+            this.leftLight = Optional.of(this.leftPrevious);
+            ret = true;
+
+        } else if (result == 0) {
+            // Readings are equal
+            if (this.leftLight.isPresent()) {
+                final int result2 =
+                        compareReadings(reading, this.leftLight.get());
+
+                ret = result2 < 0;
+
+            } else {
+                // If we can't tell, assume the reading is light:
+                ret = false;
+            }
+
+        } else {
+            // Reading is light
+            this.leftLight = Optional.of(reading);
+            ret = false;
+        }
 
         this.leftPrevious = reading;
-        return result;
+        return ret;
     }
 
     /**
@@ -87,11 +124,35 @@ public class MoveExecuter implements Runnable {
      */
     private boolean isNextRightReadingDark() {
         final int reading = this.right.readValue();
+        final int result = compareReadings(reading, this.rightPrevious);
 
-        final boolean result = isDarkComparedTo(reading, this.rightPrevious);
+        final boolean ret;
+        if (result < 0) {
+            // Reading is dark
+            this.rightLight = Optional.of(this.rightPrevious);
+            ret = true;
+
+        } else if (result == 0) {
+            // Readings are equal
+            if (this.rightLight.isPresent()) {
+                final int result2 =
+                        compareReadings(reading, this.rightLight.get());
+
+                ret = result2 < 0;
+
+            } else {
+                // If we can't tell, assume the reading is light:
+                ret = false;
+            }
+
+        } else {
+            // Reading is light
+            this.rightLight = Optional.of(reading);
+            ret = false;
+        }
 
         this.rightPrevious = reading;
-        return result;
+        return ret;
     }
 
     /**
@@ -114,12 +175,12 @@ public class MoveExecuter implements Runnable {
                 // junction:
                 if (!timer.isRunning()) {
                     passed++;
-                    timer.runFor((1.0 / this.pilot.getTravelSpeed()) * 0.1);
+                    timer.runFor((1.0 / this.pilot.getTravelSpeed()) * 0.07);
                 }
             } else if (left) {
-                this.pilot.rotate(5);
+                this.pilot.rotate(3);
             } else if (right) {
-                this.pilot.rotate(-5);
+                this.pilot.rotate(-3);
             }
 
             try {
