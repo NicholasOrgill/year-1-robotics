@@ -2,15 +2,25 @@ package routePlan;
 
 import java.util.ArrayList;
 
+import interfaces.IRoute;
+import interfaces.IRoutePlanner;
+import rp.robotics.navigation.GridPose;
+
 /**
  * A class that uses A Star search and a heuristic to determine a route to be
  * taken by a robot
  * 
  * @author Chris I 
- * IIIIMMXVI, LIBDAYIII
+ * IIIIMMXVI, LIBDAYIII, VIIII
+ * 
+ * 
+ *  The following convention is used in classes created by me:
+ *  
+ *  'a' prefix to variable name = that variable in the beginning
+ *  'g' prefix to variable name = that variable at the end /goal/ 
  *
  */
-public class FindRouteAStar implements AStarHeur, RoutePlanner {
+public class FindRouteAStar implements AStarHeur, IRoutePlanner {
 
 	// [AMENDABLE] The heuristic to be utilised
 	// pass an appropriate heuristic
@@ -44,88 +54,117 @@ public class FindRouteAStar implements AStarHeur, RoutePlanner {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see routePlan.RouteFinder#findRoute(int, int, int, int)
-	 */
+
 	@Override
-	public Route findRoute(int ax, int ay, int gx, int gy) {
+	public IRoute getRoute(GridPose p1, GridPose p2) {
+		
+		// The x coordinate of the starting location 
+		// The y coordinate of the starting location
+		int ax = p1.getX();
+		int ay = p1.getY();
+		
+		// The x coordinate of the goal location 
+		// The y coordinate of the goal location
+		int gx = p2.getX();
+		int gy = p2.getY();
+		
+		// TODO initialise A* with [] explored
+				// gridpositions[ax][ay]
+				explored.clear();
+				open.clear();
+				open.add(gridpositions[ax][ay]);
 
-		// TODO initialise A* with [] explored, and ax,ay in open list
-		// gridpositions[ax][ay]
-		explored.clear();
-		open.clear();
-		open.add(gridpositions[ax][ay]);
-
-		while (open.size() > 0) {
-			// TODO get first state in open list
-			// should have the best heuristical outcome
-			Node present = getOpenFirst();
-			if(present == gridpositions[gx][gx]) {
-				// stop search, reached goal node
-			}
-			
-			addExplored(present);
-			removeOpen(present);
-			
-			
-			// TODO iterate through all of the neighbouring grid positions
-			// Movements can only be in four directions so the only possible translations are:
-			// (1,0), (-1,0), (0,1), (0,-1)
-			// which when added to the current position would give us the coordinates of
-			// the neoghbouring cells accordingly
-			
-			// go through X coords - explanation above
-			for(int x = -1; x < 2; x++) {
-					// go through Y coords - explanation above
-					for(int y = -1; y < 2; y++) {
-						
-						int neighbouringX = present.getX() + x;
-						int neighbouringY = present.getY() + y;
-						
-						// check whether the location is allowed
-						if(isItAllowed(ax, ay, neighbouringX, neighbouringY)) {
-							// cost to move, typically 1, as it is one position away from the next direct
-							float costToNeighbour = present.getCost() + 1;
-							
-							Node neighbour = gridpositions[neighbouringX][neighbouringY];
-						
-							float neighbourCost = neighbour.getCost();
-							// need to check whether that node has been considered before
-							// and if so check whether we have obtained a lower cost for it
-							// thus take it back into consideration
-							if(costToNeighbour < neighbourCost) {
-								if(isItOpen(neighbour)) {
-									removeOpen(neighbour);
+				while (open.size() > 0) {
+					// Get the first state in open list
+					// should have the best heuristical outcome
+					Node present = getOpenFirst();
+					if(present == gridpositions[gx][gx]) {
+					// stop search, reached goal node
+					}
+					
+					addExplored(present);
+					removeOpen(present);
+					
+					// Iterate through all of the neighbouring grid positions
+					// Movements can only be in four directions so the only possible translations are:
+					// (1,0), (-1,0), (0,1), (0,-1)
+					// which when added to the current position would give us the coordinates of
+					// the neighbouring cells accordingly
+					
+					// go through X coords - explanation above
+					for(int x = -1; x < 2; x++) {
+							// go through Y coords - explanation above
+							for(int y = -1; y < 2; y++) {
+								
+								int neighbouringX = present.getX() + x;
+								int neighbouringY = present.getY() + y;
+								
+								// check whether the location is allowed
+								if(isItAllowed(ax, ay, neighbouringX, neighbouringY)) {
+									// cost to move, typically 1, as it is one position away from the next direct
+									float costToNeighbour = present.getCost() + 1;
+									
+									Node neighbour = gridpositions[neighbouringX][neighbouringY];
+								
+									float neighbourCost = neighbour.getCost();
+									// need to check whether that node has been considered before
+									// and if so check whether we have obtained a lower cost for it
+									// thus take it back into consideration
+									if(costToNeighbour < neighbourCost) {
+										if(isItOpen(neighbour)) {
+											removeOpen(neighbour);
+										}
+										if(isItExplored(neighbour)) {
+											removeExplored(neighbour);
+										}
+									}
+									
+									if(isItExplored(neighbour) == false && isItOpen(neighbour) == false) {
+										neighbourCost = costToNeighbour;
+										float h = getHeuristicCost(neighbouringX, neighbouringY, gx, gy);
+										neighbour.setHeur(h);
+										addOpen(neighbour);
+									}
 								}
-								if(isItExplored(neighbour)) {
-									removeExplored(neighbour);
-								}
-							}
-							
-							if(isItExplored(neighbour) == false && isItOpen(neighbour) == false) {
-								neighbourCost = costToNeighbour;
-								float h = getHeuristicCost(neighbouringX, neighbouringY, gx, gy);
-								neighbour.setHeur(h);
 							}
 						}
-					}
 				}
-
-		}
-
-		Route route = new Route();
-		Node goal = gridpositions[gx][gy];
-		while(!(goal.compareTo(gridpositions[ax][ay]) == 0)) {
-			// TODO add to the beginning of the list 
-			route.appendStep(goal.getX(), goal.getY());
-		}
-		
-		route.appendStep(ax, ay);
-		return route;
+				Route route = new Route();
+				Node goal = gridpositions[gx][gy];
+				while(!(goal.compareTo(gridpositions[ax][ay]) == 0)) {
+					// TODO add to the beginning of the list 
+					route.setFirstMove(goal.getX(), goal.getY());
+					goal = goal.getParent();
+				}
+				route.setFirstMove(ax, ay);
+				return route;
 	}
 
+	@Override
+	public IRoute getRoute(ArrayList<GridPose> ps) {
+		// Assuming the list of points is ordered i.e
+		// first point is starting position
+		// last point is the goal
+		
+		// initialise start and goal as dummy values
+		GridPose a = new GridPose();
+		GridPose g = new GridPose();
+		
+		// loop through the items in the list in pairs and 
+		// calculate the route between them e.g
+		// first to second; second to third; third to fourth etc.
+		// At the end we will have the route from the first location,
+		// passing through those inbetween, to the last one.
+	
+		for (int i = 0; i < ps.size() - 2; i++) {
+			for (int j = 1; j < ps.size() - 1; j++) {
+				a = ps.get(i);
+				g = ps.get(j);
+			}
+		}
+		return getRoute(a,g);
+	}
+	
 	/**
 	 * Get the first element of the open list, which should be searched next.
 	 *
@@ -254,13 +293,10 @@ public class FindRouteAStar implements AStarHeur, RoutePlanner {
 	 *            The Y coord of goal state
 	 * @return The heuristic cost assigned to the tile
 	 */
-	public float getHeuristicCost(int x, int y, int gx, int gy) {
+	@Override
+	public float getCost(int x, int y, int gx, int gy) {
 		return heur.getCost(x, y, gx, gy);
 	}
 
-	@Override
-	public float getCost(int x, int y, int gx, int gy) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 }
