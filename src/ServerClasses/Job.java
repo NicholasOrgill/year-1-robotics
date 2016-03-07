@@ -12,11 +12,19 @@ public class Job implements IJob {
 	private ArrayList<IPick> picks;
 	private JobState state;
 	private int jobID;
-
-	public Job(int _jobID, ArrayList<IPick> _picks) {
-		jobID = _jobID;
-		picks = _picks;
+	private double weight;
+	private double reward;
+	
+	public Job(int iD, ArrayList<IPick> picks) {
+		super();
+		jobID = iD;
+		this.picks = picks;
 		state = JobState.NOT_STARTED;
+		for (int i = 0; i < picks.size(); i++) {
+			weight = weight + picks.get(i).getWeight();
+			reward = reward + picks.get(i).getReward();
+		}
+		
 	}
 
 	@Override
@@ -29,12 +37,14 @@ public class Job implements IJob {
 		picks = _picks;
 	}
 
-	@Override
-	public double getReward() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getWeight() {
+		return weight;
 	}
-
+	
+	public double getReward() {
+		return reward;
+	}
+	
 	@Override
 	public IPick getNextUnassignedPick() {
 		for (IPick p : picks) {

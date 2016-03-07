@@ -8,6 +8,8 @@ public class Item implements IItem {
 	private String name;
 	private double reward;
 	private double weight;
+	private int xLocation;
+	private int yLocation;
 	
 	public Item(String _name, double _reward, double _weight) {
 		name = _name;
@@ -58,4 +60,30 @@ public class Item implements IItem {
 
 	}
 
+	public int getxLocation() {
+		return xLocation;
+	}
+	public int getyLocation() {
+		return yLocation;
+	}
+	
+	public int[] getLocation() {
+		return new int[] {getxLocation(), getyLocation()};
+	}
+	
+	public void setxLocation(int xLocation) {
+		this.xLocation = xLocation;
+	}
+
+	public void setyLocation(int yLocation) {
+		this.yLocation = yLocation;
+	}
+	
+	public void setLocation (int xLocation, int yLocation) {
+		this.xLocation = xLocation;
+		this.yLocation = yLocation;
+	}
+
+
+	
 }

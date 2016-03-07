@@ -10,11 +10,16 @@ public class Pick implements IPick {
 	private IItem item;
 	private int amount;
 	PickState state;
-
-	public Pick(IItem _item, int _amount) {
-		item = _item;
-		amount = _amount;
+	double weight;
+	double reward;
+	
+	public Pick(IItem item, int amount) {
+		super();
+		this.item = item;
+		this.amount = amount;
 		state = PickState.INACTIVE;
+		weight = amount * item.getWeight();
+		reward = amount * item.getReward();
 	}
 
 	@Override
@@ -28,15 +33,15 @@ public class Pick implements IPick {
 	}
 
 	@Override
-	public double getReward() {
-		return item.getReward() * getAmount();
-	}
-
-	@Override
 	public double getWeight() {
-		return item.getWeight() * getAmount();
+		return weight;
 	}
-
+	
+	@Override
+	public double getReward() {
+		return reward;
+	}
+	
 	@Override
 	public int getAmount() {
 		return amount;
@@ -65,6 +70,12 @@ public class Pick implements IPick {
 	@Override
 	public void setPose(GridPose _pose) {
 		item.setPose(_pose);
+	}
+
+	@Override
+	public interfaces.GridPose getPose() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
