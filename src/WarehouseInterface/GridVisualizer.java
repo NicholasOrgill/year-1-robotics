@@ -17,6 +17,7 @@ import rp.robotics.mapping.GridMap;
  */
 public class GridVisualizer extends JPanel implements Observer{
 	
+	//ToDo: add obstructions to GridMap to finish Visualiser
 	private IRobot[] robots;
 	private Warehouse warehouse;
 	private GridMap map;

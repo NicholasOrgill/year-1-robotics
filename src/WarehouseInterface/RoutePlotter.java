@@ -6,10 +6,10 @@ import interfaces.IMove;
 
 public class RoutePlotter {
 
-	public static int[] xPlot(int[] points, ArrayList<IMove> moves)
+	public static int[] xPlot(int[] points, ArrayList<IMove> moves, double xSpace)
 	{
 		//points needs to have one more slot than moves
-		int iniX = points[0];
+		int iniX = (int)(points[0] * xSpace);
 		for(int i = 0; i < points.length; i++)
 		{
 			if(i == 0)
@@ -22,12 +22,14 @@ public class RoutePlotter {
 				{
 					case IMove.EAST:
 					{
-						points[i] = iniX++;					
+						points[i] = (int)(iniX + xSpace);
+						iniX = points[i];
 						break;
 					}
 					case IMove.WEST:
 					{
-						points[i] = iniX--;
+						points[i] = (int)(iniX - xSpace);
+						iniX = points[i];
 						break;
 					}
 					default:
@@ -43,10 +45,10 @@ public class RoutePlotter {
 		return points;
 	}
 	
-	public static int[] yPlot(int[] points, ArrayList<IMove> moves)
+	public static int[] yPlot(int[] points, ArrayList<IMove> moves, double ySpace)
 	{
 		//points needs to have one more slot than moves
-		int iniY = points[0];
+		int iniY = (int)(points[0] * ySpace);
 		for(int i = 0; i < points.length; i++)
 		{
 			if(i == 0)
@@ -59,12 +61,14 @@ public class RoutePlotter {
 				{
 					case IMove.NORTH:
 					{
-						points[i] = iniY++;					
+						points[i] = (int)(iniY + ySpace);
+						iniY = points[i];				
 						break;
 					}
 					case IMove.SOUTH:
 					{
-						points[i] = iniY--;
+						points[i] = (int)(iniY - ySpace);
+						iniY = points[i];
 						break;
 					}
 					default:
