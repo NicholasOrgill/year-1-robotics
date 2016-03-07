@@ -39,10 +39,11 @@ public class GridComponent extends JComponent {
 			int x = robots[i].getPose().getX();
 			int y = robots[i].getPose().getY();
 			RobotVis robot = new RobotVis(x * xSpace, y * ySpace, Math.min(0.4 * xSpace, 0.4 * ySpace), 
-					Heading.toDegrees(robots[i].getPose().getHeading()) * (Math.PI / 180.0));
+					Heading.toDegrees(robots[i].getPose().getHeading()) * (Math.PI / 180.0), i);
 			robot.draw(g2);
-		}
 		
+		}
+
 	}
 
 }
