@@ -13,16 +13,16 @@ public class RobotMain {
         final MockServerConnection server = new MockServerConnection();
 
         final DifferentialPilot pilot = new DifferentialPilot(
-                0.062, // Wheel diameter
-                0.163, // Track width
+                65f, // Wheel diameter (cm)
+                150f, // Track width (cm)
                 Motor.B, // Left wheel
                 Motor.C); // Right wheel
 
         final LightSensor leftSensor = new LightSensor(SensorPort.S1);
         final LightSensor rightSensor = new LightSensor(SensorPort.S2);
 
-        final MoveExecuter moveExecuter =
-                new MoveExecuter(server, pilot, leftSensor, rightSensor);
+        final MoveExecuter moveExecuter = new MoveExecuter(server, pilot,
+                leftSensor, rightSensor);
 
         // final RobotInterface iface = new RobotInterface(server);
 

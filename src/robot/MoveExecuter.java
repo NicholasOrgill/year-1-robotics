@@ -2,6 +2,7 @@ package robot;
 
 import lejos.nxt.LightSensor;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.Delay;
 
 /**
  * A Runnable class that receives moves from the server and executes them on the
@@ -40,12 +41,8 @@ public class MoveExecuter implements Runnable {
     private int leftPrevious;
     private int rightPrevious;
 
-    public MoveExecuter(
-            ServerConnection server,
-            DifferentialPilot pilot,
-            LightSensor left,
-            LightSensor right)
-    {
+    public MoveExecuter(ServerConnection server, DifferentialPilot pilot,
+            LightSensor left, LightSensor right) {
         this.server = server;
         this.pilot = pilot;
         this.left = left;
@@ -53,6 +50,8 @@ public class MoveExecuter implements Runnable {
 
         this.leftPrevious = left.readValue();
         this.rightPrevious = right.readValue();
+
+        this.pilot.setTravelSpeed(200);
     }
 
     @Override
@@ -99,8 +98,8 @@ public class MoveExecuter implements Runnable {
         } else if (result == 0) {
             // Readings are equal
             if (this.leftLight.isPresent()) {
-                final int result2 =
-                        compareReadings(reading, this.leftLight.get());
+                final int result2 = compareReadings(reading,
+                        this.leftLight.get());
 
                 ret = result2 < 0;
 
@@ -135,8 +134,8 @@ public class MoveExecuter implements Runnable {
         } else if (result == 0) {
             // Readings are equal
             if (this.rightLight.isPresent()) {
-                final int result2 =
-                        compareReadings(reading, this.rightLight.get());
+                final int result2 = compareReadings(reading,
+                        this.rightLight.get());
 
                 ret = result2 < 0;
 
@@ -159,9 +158,7 @@ public class MoveExecuter implements Runnable {
      * Moves the robot forward the specified number of units (grid tiles).
      */
     private void moveForward(int units) {
-        this.pilot.forward();
 
-        final Timer timer = new Timer();
         int passed = 0;
 
         while (passed < units) {
@@ -173,22 +170,22 @@ public class MoveExecuter implements Runnable {
 
                 // Prevent `passed` from being incremented more than once per
                 // junction:
-                if (!timer.isRunning()) {
-                    passed++;
-                    timer.runFor((1.0 / this.pilot.getTravelSpeed()) * 0.07);
-                }
+                this.pilot.forward();
+                passed++;
+
+                System.out.println("Sleeping...");
+                Delay.msDelay(250);
+                System.out.println("Woke up.");
+
             } else if (left) {
-                this.pilot.rotate(3);
+                this.pilot.arcForward(600);
             } else if (right) {
-                this.pilot.rotate(-3);
+                this.pilot.arcForward(-600);
+            } else {
+                this.pilot.forward();
             }
 
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                // Never happens
-                throw new RuntimeException("MoveExecuter interrupted");
-            }
+            Delay.msDelay(20);
         }
 
         this.pilot.stop();
