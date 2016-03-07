@@ -2,7 +2,6 @@ package interfaces;
 
 import java.util.ArrayList;
 
-import javafx.beans.Observable;
 import rp.robotics.navigation.GridPose;
 
 public interface IRobot {
