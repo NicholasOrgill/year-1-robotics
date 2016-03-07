@@ -67,11 +67,11 @@ public class MoveExecuter implements Runnable {
                 break;
 
             case TURN_LEFT:
-                this.pilot.rotate(-90);
+                this.pilot.rotate(90);
                 break;
 
             case TURN_RIGHT:
-                this.pilot.rotate(90);
+                this.pilot.rotate(-90);
                 break;
 
             case TURN_AROUND:
