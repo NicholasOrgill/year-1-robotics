@@ -81,6 +81,14 @@ public interface IWarehouse {
 	public boolean getActive();
 
 	/**
+	 * Set whether the warehouse is active
+	 * 
+	 * @param _active
+	 *            Whether the warehouse is active
+	 */
+	public void setActive(boolean _active);
+
+	/**
 	 * The next job containing unassigned picks
 	 * 
 	 * @return The next job containing unassigned picks

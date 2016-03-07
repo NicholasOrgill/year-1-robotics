@@ -8,6 +8,6 @@ public interface IMove {
 	public static final int WEST  = 3;
 	
 	public int getDirection();
-	public int setDirection();
+	public void setDirection(int _direction);
 	
 }

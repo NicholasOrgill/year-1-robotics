@@ -3,6 +3,7 @@ package ServerClasses;
 import interfaces.IItem;
 import interfaces.IPick;
 import interfaces.PickState;
+import rp.robotics.navigation.GridPose;
 
 public class Pick implements IPick {
 
@@ -51,6 +52,14 @@ public class Pick implements IPick {
 	@Override
 	public void setPickState(PickState _pickState) {
 		state = _pickState;
+	}
+
+	public GridPose getPose() {
+		return item.getPose();
+	}
+
+	public void setPose(GridPose _pose) {
+		item.setPose(_pose);
 	}
 
 }
