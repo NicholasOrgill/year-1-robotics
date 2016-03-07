@@ -24,7 +24,7 @@ public interface IItem {
 	 * 
 	 * @return The items reward
 	 */
-	public int getReward();
+	public double getReward();
 
 	/**
 	 * Set the reward for the item
@@ -32,7 +32,7 @@ public interface IItem {
 	 * @param _reward
 	 *            The reward for the item
 	 */
-	public void setReward(int _reward);
+	public void setReward(double _reward);
 
 	/**
 	 * Get the weight of the item

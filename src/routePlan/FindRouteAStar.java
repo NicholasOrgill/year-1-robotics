@@ -20,11 +20,19 @@ import rp.robotics.navigation.GridPose;
  *  'g' prefix to variable name = that variable at the end /goal/ 
  *
  */
+<<<<<<< HEAD
 public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 
 	// [AMENDABLE] The heuristic to be utilised
 	// pass an appropriate heuristic
 	private ManhattanHeur heur;
+=======
+public class FindRouteAStar implements AStarHeur, IRoutePlanner {
+
+	// [AMENDABLE] The heuristic to be utilised
+	// pass an appropriate heuristic
+	private AStarHeur heur;
+>>>>>>> origin/master
 
 	// The nodes that have already been explored by the search algorithm
 	private ArrayList<Node> explored = new ArrayList<Node>();
@@ -39,6 +47,7 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 	 * Constructor for the route finder
 	 * 
 	 * @param heur
+<<<<<<< HEAD
 	 *            The heuristic, in this case Manhattan Distance.
 	 */
 	public FindRouteAStar(ManhattanHeur heur) {
@@ -46,6 +55,15 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 
 		// TODO Retrieve grid dimensions, placeholders for now
 		// Exist in GridMap/LineMap classes - reasearch more
+=======
+	 *            The heuristic
+	 */
+	public FindRouteAStar(AStarHeur heur) {
+		this.heur = heur;
+
+		// TODO Retrieve grid dimensions, placeholders for now
+		// 
+>>>>>>> origin/master
 		gridpositions = new Node[w][h];
 		for (int x = 0; x < w; x++) {
 			for (int y = 0; y < h; y++) {
@@ -102,6 +120,7 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 								// check whether the location is allowed
 								if(isItAllowed(ax, ay, neighbouringX, neighbouringY)) {
 									// cost to move, typically 1, as it is one position away from the next direct
+<<<<<<< HEAD
 									// [Modified] getHeur instead of getCost 
 									float costToNeighbour = present.getHeur() + 1;
 									
@@ -109,6 +128,13 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 								
 									// [Modified] getHeur instead of getCost 
 									float neighbourCost = neighbour.getHeur();
+=======
+									float costToNeighbour = present.getCost() + 1;
+									
+									Node neighbour = gridpositions[neighbouringX][neighbouringY];
+								
+									float neighbourCost = neighbour.getCost();
+>>>>>>> origin/master
 									// need to check whether that node has been considered before
 									// and if so check whether we have obtained a lower cost for it
 									// thus take it back into consideration
@@ -123,7 +149,11 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 									
 									if(isItExplored(neighbour) == false && isItOpen(neighbour) == false) {
 										neighbourCost = costToNeighbour;
+<<<<<<< HEAD
 										float h = getCost(neighbouringX, neighbouringY, gx, gy);
+=======
+										float h = getHeuristicCost(neighbouringX, neighbouringY, gx, gy);
+>>>>>>> origin/master
 										neighbour.setHeur(h);
 										addOpen(neighbour);
 									}
@@ -253,7 +283,11 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * [OBSOLETE] That method is provided in the GridMap class already.
+=======
+	 * TODO
+>>>>>>> origin/master
 	 * 
 	 * A method to check whether a give location is even physically possible to
 	 * be reached i.e it is not a wall or outside of the given grid (<0? x y )
@@ -275,7 +309,10 @@ public class FindRouteAStar extends ManhattanHeur implements IRoutePlanner {
 		// they should not be allowed as well
 		// might help circumvent a drawback of the Manhattan distance heuristic
 		// as well as prevent looping in circles.
+<<<<<<< HEAD
 		return true;
+=======
+>>>>>>> origin/master
 	}
 
 	/*****************
