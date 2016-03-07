@@ -1,25 +1,20 @@
-import java.awt.Point;
+import ServerClasses.*;
+import ServerClasses.Robot;
+import interfaces.IItem;
+import interfaces.IJob;
+import interfaces.IPick;
+import interfaces.IRobot;
+import rp.robotics.mapping.GridMap;
+import rp.robotics.navigation.GridPose;
+import rp.robotics.navigation.Heading;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import ServerClasses.Assigner;
-import ServerClasses.Item;
-import ServerClasses.Job;
-import ServerClasses.Pick;
-import ServerClasses.Robot;
-import ServerClasses.RouteExecutor;
-import ServerClasses.RoutePlanner;
-import ServerClasses.Warehouse;
-import interfaces.IItem;
-import interfaces.IJob;
-import interfaces.IPick;
-import interfaces.IRobot;
-import rp.robotics.navigation.GridPose;
-import rp.robotics.navigation.Heading;
 
 public class RobotWarehouse {
 
@@ -38,7 +33,6 @@ public class RobotWarehouse {
 		ArrayList<IJob> jobs;
 		ArrayList<IRobot> robots;
 
-		// parse the files
 		items = new ArrayList<IItem>();
 		jobs = new ArrayList<IJob>();
 		readFile(jobs, items, itemsPath);
@@ -48,11 +42,14 @@ public class RobotWarehouse {
 		System.out.println(jobs);
 
 		robots = new ArrayList<IRobot>();
-		robots.add(new Robot());
+		robots.add(new Robot(0, "")); // Todo: add real IDs and addresses.
+		ConnectionManager manager = new ConnectionManager();
+		manager.addConnections(robots);
 
 		// create the other systems
 		// TODO: add grid map
 		Warehouse warehouse = new Warehouse(jobs, robots, null);
+
 		RoutePlanner routePlanner = new RoutePlanner();
 		Assigner assigner = new Assigner(warehouse, routePlanner, 0);
 		RouteExecutor routeExecutor = new RouteExecutor(warehouse, timeStepDelay);
@@ -60,6 +57,9 @@ public class RobotWarehouse {
 		// start the other systems
 		assigner.start();
 		routeExecutor.start();
+
+		// Block until all our connections have been closed.
+		manager.joinAll();
 
 	}
 

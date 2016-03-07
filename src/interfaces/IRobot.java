@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.ArrayList;
 
+import ServerClasses.Connection;
 import rp.robotics.navigation.GridPose;
 
 public interface IRobot {
@@ -103,4 +104,21 @@ public interface IRobot {
 	 */
 	public void setJob(IJob job);
 
+	/**
+	 * Get the robots ID
+	 * @return
+	 */
+	public int getId();
+
+	/**
+	 * Returns the robot's bluetooth address.
+	 * @return A string representation of the bluetooth address.
+	 */
+	public String getAddress();
+
+	/**
+	 * Give our virtual "robot" a personal channel to communicate with the NXT.
+	 * @param c The connection object, created by ConnectionManager.
+     */
+	void setConnection(Connection c);
 }
