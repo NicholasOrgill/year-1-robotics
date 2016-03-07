@@ -2,9 +2,11 @@ package WarehouseInterface;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
+import interfaces.IMove;
 import interfaces.IRobot;
 import rp.robotics.navigation.Heading;
 
@@ -34,6 +36,21 @@ public class GridComponent extends JComponent {
 		
 		double xSpace = xHeight / (xNumber - 1.0);
 		double ySpace = yHeight / (yNumber - 1.0);
+		for(int i = 0; i < robots.length; i ++)
+		{
+			//path Plotting
+			ArrayList<IMove> moves = robots[i].getRoute().getRoute();
+			int[] xPoints = new int[moves.size() + 1];
+			int[] yPoints = new int[moves.size() + 1];
+			xPoints[0] = robots[i].getPose().getX();
+			yPoints[0] = robots[i].getPose().getY();
+			
+			xPoints = RoutePlotter.xPlot(xPoints, moves, xSpace);
+			yPoints = RoutePlotter.yPlot(yPoints, moves, ySpace);
+		
+			RouteDraw route = new RouteDraw(xPoints, yPoints);
+			route.draw(g2);
+		}
 		for(int i = 0; i < robots.length; i ++)
 		{
 			int x = robots[i].getPose().getX();
