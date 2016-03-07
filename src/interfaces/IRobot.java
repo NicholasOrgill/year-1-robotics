@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.ArrayList;
 
+import javafx.beans.Observable;
 import rp.robotics.navigation.GridPose;
 
 public interface IRobot {
@@ -87,5 +88,20 @@ public interface IRobot {
 	 * @return The message received from the robot
 	 */
 	public IMessage receiveMessage();
+
+	/**
+	 * Get the current job on the robot
+	 * 
+	 * @return The current job
+	 */
+	public IJob getJob();
+
+	/**
+	 * Set the current job on the robot
+	 * 
+	 * @param job
+	 *            The new job
+	 */
+	public void setJob(IJob job);
 
 }

@@ -51,7 +51,7 @@ public class RobotWarehouse {
 		robots.add(new Robot());
 
 		// create the other systems
-		//TODO: add grid map
+		// TODO: add grid map
 		Warehouse warehouse = new Warehouse(jobs, robots, null);
 		RoutePlanner routePlanner = new RoutePlanner();
 		Assigner assigner = new Assigner(warehouse, routePlanner, 0);

@@ -1,7 +1,9 @@
 package ServerClasses;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
+import interfaces.IJob;
 import interfaces.IMessage;
 import interfaces.IPick;
 import interfaces.IRobot;
@@ -9,18 +11,18 @@ import interfaces.IRoute;
 import interfaces.RobotState;
 import rp.robotics.navigation.GridPose;
 
-public class Robot implements IRobot {
+public class Robot extends Observable implements IRobot {
 
 	private RobotState state;
 	private GridPose pose;
 	private ArrayList<IPick> picks;
 	private IRoute route;
-	
-	public Robot(){
+
+	public Robot() {
 		picks = new ArrayList<IPick>();
 		state = RobotState.WAITING_FOR_PICKS;
 	}
-	
+
 	@Override
 	public GridPose getPose() {
 		return pose;
@@ -71,13 +73,25 @@ public class Robot implements IRobot {
 	@Override
 	public void sendMessage(IMessage _message) {
 		// TODO Auto-generated method stub
- 
+
 	}
 
 	@Override
 	public IMessage receiveMessage() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public IJob getJob() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setJob(IJob job) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

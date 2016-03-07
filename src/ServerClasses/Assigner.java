@@ -44,11 +44,12 @@ public class Assigner extends Thread implements IAssigner {
 			if (robot.getState() == RobotState.WAITING_FOR_PICKS) {
 				int weight = 0;
 				ArrayList<IPick> picks = new ArrayList<IPick>();
-				while (weight <= 50) {
-					IPick nextPick = warehouse.getNextIncompleteJob().getNextUnassignedPick();
+				IPick nextPick = warehouse.getNextIncompleteJob().getNextUnassignedPick();
+				while (nextPick != null && weight + nextPick.getWeight() <= 50) {
 					picks.add(nextPick);
 					nextPick.setPickState(PickState.ASSIGNED);
 					weight += nextPick.getWeight();
+					nextPick = warehouse.getNextIncompleteJob().getNextUnassignedPick();
 				}
 				robot.assignPicks(picks);
 				robot.assignPicks(orderPicks(picks));
