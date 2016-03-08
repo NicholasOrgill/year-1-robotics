@@ -2,6 +2,7 @@ package interfaces;
 
 import java.util.ArrayList;
 
+import ServerClasses.Connection;
 import rp.robotics.navigation.GridPose;
 
 public interface IRobot {
@@ -45,6 +46,14 @@ public interface IRobot {
 	public void assignPick(IPick _pick);
 
 	/**
+	 * Assign a list of picks to the robot
+	 * 
+	 * @param _picks
+	 *            The list of picks to be assigned
+	 */
+	public void assignPicks(ArrayList<IPick> _picks);
+
+	/**
 	 * Get the route for the robot
 	 * 
 	 * @return The robots route
@@ -80,4 +89,21 @@ public interface IRobot {
 	 */
 	public IMessage receiveMessage();
 
+	/**
+	 * Returns the robot's unique identifier.
+	 * @return An integer identifying the robot uniquely.
+	 */
+	int getId();
+
+	/**
+	 * Returns the robot's bluetooth address.
+	 * @return A string representation of the bluetooth address.
+	 */
+	String getAddress();
+
+	/**
+	 * Give our virtual "robot" a personal channel to communicate with the NXT.
+	 * @param c The connection object, created by ConnectionManager.
+     */
+	void setConnection(Connection c);
 }

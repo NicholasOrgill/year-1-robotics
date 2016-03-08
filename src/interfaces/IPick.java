@@ -1,6 +1,6 @@
 package interfaces;
 
-import java.util.ArrayList;
+import rp.robotics.navigation.GridPose;
 
 public interface IPick {
 
@@ -24,14 +24,14 @@ public interface IPick {
 	 * 
 	 * @return The reward for the pick
 	 */
-	public int getReward();
+	public double getReward();
 
 	/**
 	 * Get the total weight of the pick
 	 * 
 	 * @return The total weight of the pick
 	 */
-	public int getWeight();
+	public double getWeight();
 
 	/**
 	 * get the number of items in the pick
@@ -62,5 +62,19 @@ public interface IPick {
 	 *            the new pick state
 	 */
 	public void setPickState(PickState _pickState);
+
+	/**
+	 * Get the location of the pick on the grid
+	 * 
+	 * @return The picks location
+	 */
+	public GridPose getPose();
+
+	/**
+	 * Set the position of the pick on the grid
+	 * 
+	 * @param _pose
+	 */
+	public void setPose(GridPose _pose);
 
 }

@@ -3,11 +3,19 @@ package ServerClasses;
 import interfaces.IItem;
 import interfaces.IPick;
 import interfaces.PickState;
+import rp.robotics.navigation.GridPose;
 
 public class Pick implements IPick {
 
 	private IItem item;
+	private int amount;
 	PickState state;
+
+	public Pick(IItem _item, int _amount) {
+		item = _item;
+		amount = _amount;
+		state = PickState.INACTIVE;
+	}
 
 	@Override
 	public IItem getItem() {
@@ -20,27 +28,23 @@ public class Pick implements IPick {
 	}
 
 	@Override
-	public int getReward() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getReward() {
+		return item.getReward() * getAmount();
 	}
 
 	@Override
-	public int getWeight() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getWeight() {
+		return item.getWeight() * getAmount();
 	}
 
 	@Override
 	public int getAmount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return amount;
 	}
 
 	@Override
 	public void setAmount(int _amount) {
-		// TODO Auto-generated method stub
-
+		amount = _amount;
 	}
 
 	@Override
@@ -51,6 +55,16 @@ public class Pick implements IPick {
 	@Override
 	public void setPickState(PickState _pickState) {
 		state = _pickState;
+	}
+
+	@Override
+	public GridPose getPose() {
+		return item.getPose();
+	}
+
+	@Override
+	public void setPose(GridPose _pose) {
+		item.setPose(_pose);
 	}
 
 }

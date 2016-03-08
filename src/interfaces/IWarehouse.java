@@ -1,4 +1,4 @@
-package interfaces;
+	package interfaces;
 
 import java.util.ArrayList;
 
@@ -79,6 +79,14 @@ public interface IWarehouse {
 	 * @return Whether the warehouse is
 	 */
 	public boolean getActive();
+
+	/**
+	 * Set whether the warehouse is active
+	 * 
+	 * @param _active
+	 *            Whether the warehouse is active
+	 */
+	public void setActive(boolean _active);
 
 	/**
 	 * The next job containing unassigned picks

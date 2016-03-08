@@ -24,22 +24,22 @@ public interface IJob {
 	 * 
 	 * @return The reward for the job
 	 */
-	public int getReward();
+	public double getReward();
 
 	/**
-	 * Get whether the job is complete
+	 * Get the job state
 	 * 
-	 * @return Whether the job is complete
+	 * @return The job state
 	 */
-	public boolean getComplete();
+	public JobState getState();
 
 	/**
-	 * Set whether the job is complete
+	 * Set the job state
 	 * 
 	 * @param _complete
 	 *            Whether the job is complete
 	 */
-	public void setComplete(boolean _complete);
+	public void setState(JobState _jobState);
 
 	/**
 	 * Get the next unassigned pick
@@ -47,5 +47,12 @@ public interface IJob {
 	 * @return The next unassigned pick
 	 */
 	public IPick getNextUnassignedPick();
+
+	/**
+	 * Get the remaining unassigned picks for the job
+	 * 
+	 * @return The remaining unassigned picks
+	 */
+	public ArrayList<IPick> getUnassignedPicks();
 
 }

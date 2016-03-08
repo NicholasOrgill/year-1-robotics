@@ -1,5 +1,7 @@
 package interfaces;
 
+import java.util.ArrayList;
+
 import rp.robotics.navigation.GridPose;
 
 public interface IRoutePlanner {
@@ -15,4 +17,23 @@ public interface IRoutePlanner {
 	 */
 	public IRoute getRoute(GridPose _p1, GridPose _p2);
 
+	/**
+	 * Get the route that a robot would have to take through a list of points
+	 * 
+	 * @param _ps
+	 *            The list of points
+	 * @return The route the robot would have to take
+	 */
+	public IRoute getRoute(ArrayList<GridPose> _ps);
+
+	/**
+	 * Get the euclidian distance between two points
+	 * 
+	 * @param _p1
+	 *            The first point
+	 * @param _p2
+	 *            The second point
+	 * @return The euclidian distance between the two points
+	 */
+	public double getEuclidianDistance(GridPose _p1, GridPose _p2);
 }
