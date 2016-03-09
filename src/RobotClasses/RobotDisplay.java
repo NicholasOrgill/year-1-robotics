@@ -1,67 +1,48 @@
 package RobotClasses;
-
-import java.util.Observable;
-import java.util.Observer;
+import RobotClasses.RobotObserver;
 import lejos.nxt.Button;
 import lejos.util.Delay;
 
-public class RobotDisplay implements Runnable, Observer{
+public class RobotDisplay implements Runnable{
 	
-	private String itemName;
-	private int itemCount;
+	RobotObserver ro = new RobotObserver();
 	private int count;
 	
-	public RobotDisplay(){
-		count = 0;
-		
-		//TESTING PURPOSES ONLY
-		itemName = "banana";
-		itemCount = 3;
-	}
-
 	@Override
-	public void run() {
-		//To be changed. in what format is the info for
-		//items and item amount going to be given?
-		//ie. 3 banana 2 oranges 1 apple etc.
-		// or will it be in the form of 2 arrays
-		//eg. 3 2 1
-		//	banana orage apple
-		//and i'll have to loop over the array to display
-		// the info? or something else entirely different?
-		System.out.println("Required: " + itemCount + "x " + itemName);
+	public void run(){
+		System.out.println("Required: " + ro.getItemCount() + "x " + ro.getItemName());
+		System.out.println("");
+		System.out.println("To load an item once, please press the middle orange button.");
+		System.out.println("If the robot is in the wrong location, please press the bottom dark grey button.");
 		Delay.msDelay(5000);
 		
-		while(count != itemCount){
-			Button.waitForAnyPress();
+		Button.waitForAnyPress();
+		if(Button.readButtons() == Button.ID_ESCAPE){
+			System.out.println("The robot is in the wrong location.");
+		}else if(Button.readButtons() == Button.ID_ENTER){
 			count++;
-			
-			if(count == itemCount){
-				System.out.println("All items loaded.");
-				//need to notify something? TODO
+			System.out.println("Required: " + ro.getItemCount() + "x " + ro.getItemName());
+			System.out.println(count + " " + ro.getItemName() + " has been loaded.");
+			Delay.msDelay(5000);
+			while(count != ro.getItemCount()){
+				Button.ENTER.waitForPressAndRelease();
+				count++;
+				if(count == 1){
+					System.out.println("Required: " + ro.getItemCount() + "x " + ro.getItemName());
+					System.out.println(count + " " + ro.getItemName() + " has been loaded.");
+					Delay.msDelay(5000);
+				}else{
+					System.out.println("Required: " + ro.getItemCount() + "x " + ro.getItemName());
+					System.out.println(count + " " + ro.getItemName() + "s have been loaded.");
+					Delay.msDelay(5000);
+				}
+		
+				if(count == ro.getItemCount()){
+					System.out.println("Items loaded.");
+					Delay.msDelay(5000);
+					//need to notify something? TODO
+				}
 			}
 		}
-	}
-	
-	public String getItemName(){ //to be change/unneeded
-		return itemName;
-	}
-	
-	public int getItemCount(){//to be change/unneeded
-		return itemCount;
-	}
-	
-	public void setItemName(){ //to be change/unneeded
-	//	itemName = //from Message to be received
-	}
-	
-	public void setItemCount(){//to be change/unneeded
-	//	itemCount = //from Message to be received
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		setItemName();
-		setItemCount();
 	}
 }
