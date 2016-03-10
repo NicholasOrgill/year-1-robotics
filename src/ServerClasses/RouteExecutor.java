@@ -2,11 +2,13 @@ package ServerClasses;
 
 import java.util.ArrayList;
 
+import SharedClasses.Message;
 import interfaces.IMessage;
 import interfaces.IRobot;
 import interfaces.IRoute;
 import interfaces.IRouteExecutor;
 import interfaces.IWarehouse;
+import interfaces.MessageHeader;
 import interfaces.RobotState;
 
 public class RouteExecutor extends Thread implements IRouteExecutor {
@@ -24,6 +26,11 @@ public class RouteExecutor extends Thread implements IRouteExecutor {
 	@Override
 	public void run() {
 		while(warehouse.getActive()) {
+			try {
+				sleep(delay);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			robotCount = warehouse.getRobotCount();
 			for(int i = 0; i < robotCount; i++) {
 				IRobot robot = warehouse.getRobot(i);
@@ -35,7 +42,10 @@ public class RouteExecutor extends Thread implements IRouteExecutor {
 			for(int i = 0; i < excRobots.size(); i++) {
 				IRobot cRob = excRobots.get(i);
 				IRoute cRoute = cRob.getRoute();
-				
+				if (cRoute.getLength() == 0) {
+					//route execution complete pick location reached
+				}
+				cRob.sendMessage((IMessage) new Message(MessageHeader.MOVE, cRoute.getNextMove().getDirection().toString()));
 			}
 		}
 	}
@@ -52,7 +62,5 @@ public class RouteExecutor extends Thread implements IRouteExecutor {
 	@Override
 	public IMessage returnMessage(IMessage _msg) {
 		return _msg;
-		// TODO Auto-generated method stub
-		
 	}
 }

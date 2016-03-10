@@ -7,8 +7,8 @@ import interfaces.IRoute;
 
 public class Route implements IRoute {
 	
-	ArrayList<IMove> route;
-	boolean routeChanged;
+	private ArrayList<IMove> route;
+	private boolean routeChanged;
 	
 	public Route (ArrayList<IMove> _route) {
 		route = _route;
